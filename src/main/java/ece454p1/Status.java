@@ -1,5 +1,7 @@
 package ece454p1;
 
+import java.util.Map;
+
 /**
  * Status is the class that you populate with status data on the state of
  * replication in this peer and its knowledge of the replication level within
@@ -13,23 +15,23 @@ public abstract class Status {
 	public abstract int numberOfFiles();
 
 	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float fractionPresentLocally(int fileNumber); 
+	public abstract float fractionPresentLocally(String fileName);
 
 	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float fractionPresent(int fileNumber); 
+	public abstract float fractionPresent(String fileName);
 
 	/*Use -1 to indicate if the file requested is not present*/
-	public abstract int minimumReplicationLevel(int fileNumber); 
-	
+	public abstract int minimumReplicationLevel(String fileName);
+
 	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float averageReplicationLevel(int fileNumber); 
-	
-	
-	
-	// This is very cheesy and very lazy, but the focus of this assignment 
+	public abstract float averageReplicationLevel(String fileName);
+
+
+
+	// This is very cheesy and very lazy, but the focus of this assignment
 	// is not on dynamic containers but on the BT p2p file distribution
 
-	/* 
+	/*
 	 * The number of files currently in the system, 
 	 * as viewed by this peer 
 	 */
@@ -39,7 +41,8 @@ public abstract class Status {
 	 * The fraction of the file present locally (= chunks on this peer/total
 	 * number chunks in the file)
 	 */
-	float[] local;
+//	float[] local;
+    Map<String, Float> local;
 
 	/*
 	 * The fraction of the file present in the system 
@@ -50,20 +53,23 @@ public abstract class Status {
 	 * given that a file must be added at a peer, 
 	 * think about why this number would ever not be 1.)
 	 */
-	float[] system;
+    Map<String, Float> system;
+//	float[] system;
 
 	/*
 	 * Sum by chunk over all peers; the minimum of this number is the least
 	 * replicated chunk, and thus represents the least level of 
 	 * replication of  the file
 	 */
-	int[] leastReplication;
+//	int[] leastReplication;
+    Map<String, Integer> leastReplication;
 
 	/*
 	 * Sum all chunks in all peers; 
 	 * dived this by the number of chunks in the file; 
 	 * this is the average level of replication of the file
 	 */
-	float[] weightedLeastReplication;
+    Map<String, Float> weightedLeastReplication;
+//	float[] weightedLeastReplication;
 
 }

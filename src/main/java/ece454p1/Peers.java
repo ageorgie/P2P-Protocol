@@ -1,5 +1,10 @@
 package ece454p1;
 
+import java.lang.reflect.Array;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Peers is a dumb container to hold the peers; the number of peers is fixed,
  * but needs to be set up when a peer starts up; feel free to use some other
@@ -7,7 +12,7 @@ package ece454p1;
  * peersFile, since otherwise you have no way of having a calling entity tell
  * your code what the peers are in the system.
  **/
-public abstract class Peers {
+public class Peers {
 
 	/**
 	 * The peersFile is the name of a file that contains 
@@ -22,13 +27,44 @@ public abstract class Peers {
 	 * @param peersFile
 	 * @return
 	 */
-	public abstract int initialize(String peersFile);
 
-	public abstract Peer getPeer(int i);
+    Map<String, Map<String, BitSet>> peerFileMap;
 
-	//TODO You will likely want to add methods such as visit()
 
-	private int numPeers;
-	private Peer[] peers;
+    public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
+        for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
+            String remoteHost = entry.getKey();
+            Map<String, BitSet> bitSetMap = entry.getValue();
+            if(peerFileMap.containsKey(remoteHost)) {
+
+                for(Map.Entry<String, BitSet> bitSetEntry: bitSetMap.entrySet()) {
+                    String fileName = bitSetEntry.getKey();
+                    BitSet receivedBitSet = bitSetEntry.getValue();
+
+                    if(bitSetMap.containsKey(fileName)) {
+                        BitSet originalBitSet = bitSetMap.get(fileName);
+                        originalBitSet.or(receivedBitSet);
+                    } else  {
+                        bitSetMap.put(fileName, receivedBitSet);
+                    }
+
+                }
+
+            } else {
+                peerFileMap.put(remoteHost, bitSetMap);
+            }
+        }
+    }
+//	public abstract int initialize(String peersFile);
+
+//	public abstract Peer getPeer(int i);
+
+
+//    public void broadcastMap() {}
+
+//	private int numPeers;
+
+//    HashMap<String, BitSet>[] peerBitSetArray = new HashMap[Config.MAX_PEERS];
+
 
 }
