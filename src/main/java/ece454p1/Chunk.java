@@ -2,6 +2,7 @@ package ece454p1;
 
 import java.io.Serializable;
 import java.util.BitSet;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,6 +17,7 @@ public class Chunk implements Serializable {
     String fileName;
     int chunkNum;
     byte[] byteArray = new byte[Config.CHUNK_SIZE];
+    Map<String, Map<String, BitSet>> peerFileMap;
     int totalNumChunks;
 
     public Chunk(String fileName, int chunkNum, int totalNumChunks, byte[] byteArray) {
@@ -57,5 +59,9 @@ public class Chunk implements Serializable {
 
     public void setByteArray(byte[] byteArray) {
         this.byteArray = byteArray;
+    }
+
+    public Map<String, Map<String, BitSet>> getPeerFileMap() {
+        return peerFileMap;
     }
 }

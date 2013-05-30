@@ -1,9 +1,8 @@
 package ece454p1;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Peers is a dumb container to hold the peers; the number of peers is fixed,
@@ -12,7 +11,7 @@ import java.util.Map;
  * peersFile, since otherwise you have no way of having a calling entity tell
  * your code what the peers are in the system.
  **/
-public class Peers {
+public class Peers implements Serializable {
 
 	/**
 	 * The peersFile is the name of a file that contains 
@@ -28,8 +27,18 @@ public class Peers {
 	 * @return
 	 */
 
-    Map<String, Map<String, BitSet>> peerFileMap;
 
+
+    Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
+
+    public Peers(Map<String, Map<String, BitSet>> peerFileMap) {
+        this.peerFileMap = peerFileMap;
+    }
+
+    public void updatePeerFileMap(Chunk chunk) {
+        peerFileMap.get(Peer.getHostAndPort());
+        updatePeerFileMap(chunk.getPeerFileMap());
+    }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
@@ -47,15 +56,38 @@ public class Peers {
                     } else  {
                         bitSetMap.put(fileName, receivedBitSet);
                     }
-
                 }
-
             } else {
                 peerFileMap.put(remoteHost, bitSetMap);
             }
         }
     }
-//	public abstract int initialize(String peersFile);
+
+    public void insertNewFile(String fileName, int numChunks) {
+        Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
+        if(!localBitSetMap.containsKey(fileName)) {
+            BitSet bitSet = new BitSet(numChunks);
+            for(int i = 0;i< bitSet.length() ; i++) {
+                bitSet.flip(i);
+            }
+            localBitSetMap.put(fileName, bitSet);
+        }
+    }
+
+    public List<String> getPeerAddresses() {
+        List<String> output = new LinkedList<String>();
+        for(Map.Entry entry:peerFileMap.entrySet()) {
+            output.add((String) entry.getKey());
+        }
+        return output;
+    }
+
+    public Map<String, Map<String, BitSet>> getPeerFileMap() {
+        return peerFileMap;
+    }
+
+
+    //	public abstract int initialize(String peersFile);
 
 //	public abstract Peer getPeer(int i);
 

@@ -1,14 +1,15 @@
 package ece454p1;
 
-import sun.misc.IOUtils;
-
 import java.io.*;
-import java.lang.reflect.Array;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Peer and Status are the classes we really care about Peers is a container;
@@ -16,20 +17,44 @@ import java.util.Map;
  */
 public class Peer {
     static Map<String, File> fileMap;
-    static Map<String, BitSet> bitSetMap;
-
+    static Peers peers;
     static String host;
     static int port;
+    static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    private Peer(String host, int port) {
+
+    private Peer(String host, int port) throws IOException {
         fileMap = new HashMap<String, File>();
-        bitSetMap = new HashMap<String, BitSet>();
+//        initializePeers(Config.basePath + "peerFileName.txt");
+
+        initializePeers("/Users/omidmortazavi/Documents/projects/ECE454Project1/addresses.txt");
         this.host = host;
         this.port = port;
     }
 
+
+
+    public static void initializePeers(String peerListPath) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(peerListPath));
+        String line;
+        Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
+        while ((line = br.readLine()) != null) {
+            bitSetMap.put(line, new HashMap<String, BitSet>());
+        }
+        br.close();
+        peers = new Peers(bitSetMap);
+    }
+
+    public static String getHostAndPort() {
+        return host + " " + port;
+    }
+
     public static String getBasePath() {
         return String.format("%s/%s", Config.basePath, port);
+    }
+
+    public static Peers getPeers() {
+        return peers;
     }
 
     public static void ReceiveChunk(Chunk chunk) throws IOException {
@@ -56,6 +81,8 @@ public class Peer {
         } catch (IOException ex) {
            throw ex;
         }
+
+        peers.updatePeerFileMap(chunk);
     }
 
 
@@ -69,13 +96,7 @@ public class Peer {
         int numChunks = (int) Math.ceil(file.length() / Config.CHUNK_SIZE);
         String[] splitPath = filePath.split("/");
         String fileName = splitPath[splitPath.length - 1];
-        BitSet bitSet = new BitSet(numChunks);
-        for(int i = 0;i< bitSet.length() ; i++) {
-            bitSet.flip(i);
-        }
-
-        bitSetMap.put(fileName, bitSet);
-
+        peers.insertNewFile(fileName, numChunks);
         fileMap.put(fileName, file);
         return 0;
     };
@@ -87,7 +108,12 @@ public class Peer {
 	 * Note that we should have the peer list, so it is not needed as a
 	 * parameter
 	 */
-//	public int join(){};
+	public static int join() throws IOException {
+
+        executorService.submit(new Receiver(port));
+        executorService.submit(new Sender());
+        return 1;
+    };
 
 //	public int leave(){};
 
@@ -103,12 +129,13 @@ public class Peer {
 	};
 
 	private State currentState;
-	private Peers peers;
 
-    public static void main(String[] args) {
-        Peer peer = new Peer("129.97.125.24", 31422);
-        peer.insert("/Users/omidmortazavi/Documents/Books/copy.pdf");
-        System.out.println(peer.fileMap.get("copy.pdf"));
+    public static void main(String[] args) throws IOException {
+        new Peer("129.97.124.42", 11307);
+        System.out.println(Peer.peers.getPeerFileMap());
+        Peer.join();
     }
+
+
 
 }
