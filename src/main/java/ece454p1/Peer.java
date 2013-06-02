@@ -131,7 +131,7 @@ public class Peer {
 	private State currentState;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new Peer("eceLinux10", 10064);
+        new Peer(args[0], Integer.parseInt(args[1]));
         System.out.println(Peer.peers.getPeerFileMap());
         Peer.join();
     }
