@@ -45,7 +45,7 @@ public class Sender implements Callable<Integer> {
                 }
             }
         }
-        for(Socket socket:sockets) {                                                                         s
+        for(Socket socket:sockets) {
             send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
         }
     }
