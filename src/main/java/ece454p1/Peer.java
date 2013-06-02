@@ -27,15 +27,15 @@ public class Peer {
         fileMap = new HashMap<String, File>();
 //        initializePeers(Config.basePath + "peerFileName.txt");
 
-        initializePeers("/home/ageorgie/code/ECE454Project1/src/main/resources");
+        initializePeers(getClass().getClassLoader().getResourceAsStream("addresses.txt"));
         this.host = host;
         this.port = port;
     }
 
 
 
-    public static void initializePeers(String peerListPath) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(peerListPath));
+    public static void initializePeers(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
