@@ -40,6 +40,7 @@ public class Sender implements Callable<Integer> {
                 try {
                     sockets.add(new Socket(host, port));
                     connectionAccepted = true;
+                    System.out.printf("Connection accepted : Ready for transfer");
                 } catch (ConnectException e) {
                     System.out.printf("Connection refused for %s : %d ... retrying\n", host, port);
                     Thread.sleep(5000);
