@@ -28,7 +28,7 @@ public class Sender implements Callable<Integer> {
         os.close();
     }
 
-    public Sender() throws IOException {
+    public Sender() throws IOException, InterruptedException {
         List<String> peerAddresses = Peer.getPeers().getPeerAddresses();
         sockets = new LinkedList<Socket>();
         for(String peerAddress: peerAddresses) {
@@ -42,6 +42,7 @@ public class Sender implements Callable<Integer> {
                     connectionAccepted = true;
                 } catch (ConnectException e) {
                     System.out.printf("Connection refused for %s : %d ... retrying\n", host, port);
+                    Thread.sleep(5000);
                 }
             }
         }
