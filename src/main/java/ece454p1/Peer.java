@@ -108,7 +108,7 @@ public class Peer {
 	 * Note that we should have the peer list, so it is not needed as a
 	 * parameter
 	 */
-	public static int join() throws IOException {
+	public static int join() throws IOException, InterruptedException {
 
         executorService.submit(new Receiver(port));
         executorService.submit(new Sender());
@@ -130,8 +130,8 @@ public class Peer {
 
 	private State currentState;
 
-    public static void main(String[] args) throws IOException {
-        new Peer("129.97.124.42", 11307);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        new Peer("localhost", 11307);
         System.out.println(Peer.peers.getPeerFileMap());
         Peer.join();
     }
