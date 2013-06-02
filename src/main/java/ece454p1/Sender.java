@@ -1,6 +1,7 @@
 package ece454p1;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +35,17 @@ public class Sender implements Callable<Integer> {
             String[] split = peerAddress.split(" ");
             String host = split[0];
             int port = Integer.parseInt(split[1]);
-            sockets.add(new Socket(host, port));
+            Boolean connectionAccepted = false;
+            while(!connectionAccepted) {
+                try {
+                    sockets.add(new Socket(host, port));
+                    connectionAccepted = true;
+                } catch (ConnectException e) {
+                    System.out.printf("Connection refused for %s : %d ... retrying\n", host, port);
+                }
+            }
         }
-        for(Socket socket:sockets) {
+        for(Socket socket:sockets) {                                                                         s
             send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
         }
     }
