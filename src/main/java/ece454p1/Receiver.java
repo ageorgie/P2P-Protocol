@@ -33,7 +33,11 @@ public class Receiver implements Callable<Integer> {
                 Socket client = serverSocket.accept();
                 ObjectInputStream ois;
                 Object obj = new Object();
+		
                 SocketChannel channel = client.getChannel();
+		if(channel==null) {
+		    continue;
+		}
                 try {
                     ois = new ObjectInputStream(Channels.newInputStream(channel));
                     obj = ois.readObject();

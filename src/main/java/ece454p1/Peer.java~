@@ -27,15 +27,15 @@ public class Peer {
         fileMap = new HashMap<String, File>();
 //        initializePeers(Config.basePath + "peerFileName.txt");
 
-        initializePeers("/home/ageorgie/code/ECE454Project1/src/main/resources");
+        initializePeers(getClass().getClassLoader().getResourceAsStream("addresses.txt"));
         this.host = host;
         this.port = port;
     }
 
 
 
-    public static void initializePeers(String peerListPath) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(peerListPath));
+    public static void initializePeers(InputStream in) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
@@ -108,7 +108,7 @@ public class Peer {
 	 * Note that we should have the peer list, so it is not needed as a
 	 * parameter
 	 */
-	public static int join() throws IOException {
+	public static int join() throws IOException, InterruptedException {
 
         executorService.submit(new Receiver(port));
         executorService.submit(new Sender());
@@ -130,8 +130,8 @@ public class Peer {
 
 	private State currentState;
 
-    public static void main(String[] args) throws IOException {
-        new Peer("129.97.124.42", 11307);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        new Peer("eceLinux9", 10062);
         System.out.println(Peer.peers.getPeerFileMap());
         Peer.join();
     }
