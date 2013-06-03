@@ -134,11 +134,9 @@ public class Peer {
 	private State currentState;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new Peer("localhost", 11307);
-        Scanner in = new Scanner(System.in);
-        while(true) {
-            executeCommand(in.nextLine());
-        }
+        new Peer(args[0], Integer.parseInt(args[1]));
+        System.out.println(Peer.peers.getPeerFileMap());
+        Peer.join();
     }
 
     public static void executeCommand(String command) throws IOException, InterruptedException {
