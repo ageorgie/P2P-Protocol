@@ -31,40 +31,30 @@ public class Receiver implements Callable<Integer> {
     public Integer call() throws Exception {
         try {
             while(true) {
-    //            System.out.println(serverSocket.isClosed());
                 Socket client = serverSocket.accept();
-								System.out.println("Am I here?");
                 Object obj = new Object();
 								
 								InputStream is = client.getInputStream();
 								ObjectInputStream ois = new ObjectInputStream(is);
 								
-								System.out.println("I am still working at this point");
                 try {
-                		System.out.println("Can I read the object?");
                     obj = ois.readObject();
-                		System.out.println("I might have read the object");
                 		System.out.println(obj.getClass());
                 } catch (Exception ex) {
-                		System.out.println("exception was caught");
                     ex.printStackTrace();
                 }
 
                 if(obj.getClass().isAssignableFrom(Chunk.class)) {
-                    System.out.println("Received Chunk!");
                     Chunk chunk = (Chunk) obj;
                     Peer.ReceiveChunk(chunk);
                 } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
-                		System.out.println("Received FileMap");
                     Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
                     System.out.println(bitSetMap);
                 } else {
-                		System.out.println("That's a cold ass honky");
                     throw new Exception("Received object type is not recognized");
                 }
             }
         } finally {
-        		System.out.println("Did the socket close?");
             serverSocket.close();
         }
     }

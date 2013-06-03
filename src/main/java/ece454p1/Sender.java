@@ -21,8 +21,6 @@ public class Sender implements Callable<Integer> {
     List<Socket> sockets;
 
     public static void send(Socket socket, Serializable object) throws IOException {
-    		//System.out.println("I am trying to send something");
-    		//System.out.println(object);
         OutputStream os = socket.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(object);
@@ -49,17 +47,13 @@ public class Sender implements Callable<Integer> {
                 }
             }
         }
-        //System.out.println("I have established a connection");
         for(Socket socket:sockets) {
-        		//System.out.println("Sockets:");
-        		//System.out.println(socket);
             send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
         }
     }
 
     public Integer call() throws Exception {
        try {
-       			//System.out.println("I am in the call method");
             while(true) {
                 Thread.sleep(1000);
                 for(Socket socket:sockets) {
