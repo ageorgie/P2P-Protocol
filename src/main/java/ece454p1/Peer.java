@@ -8,6 +8,7 @@ import java.nio.channels.FileChannel;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -115,7 +116,9 @@ public class Peer {
         return 1;
     };
 
-//	public int leave(){};
+	public static int leave(){
+        return -1;
+    };
 
 	/*
 	 * TODO: Feel free to hack around with the private data, 
@@ -132,10 +135,33 @@ public class Peer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         new Peer("localhost", 11307);
-        System.out.println(Peer.peers.getPeerFileMap());
-        Peer.join();
+        Scanner in = new Scanner(System.in);
+        while(true) {
+            executeCommand(in.nextLine());
+        }
+    }
+
+    public static void executeCommand(String command) throws IOException, InterruptedException {
+        String[] split = command.split(" ");
+        Command commandEnum = Command.valueOf(split[0]);
+        switch (commandEnum) {
+            case join:
+                Peer.join();
+            case leave:
+                Peer.leave();
+            case insert:
+                Peer.insert(split[1]);
+            default:
+                System.out.println("Command not supported");
+        }
+
     }
 
 
-
+     public enum Command {
+         join,
+         leave,
+         insert,
+         query
+     }
 }
