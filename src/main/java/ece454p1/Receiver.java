@@ -38,6 +38,7 @@ public class Receiver implements Callable<Integer> {
 								ObjectInputStream ois = new ObjectInputStream(is);
 								
                 try {
+                    obj = ois.readObject();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -47,7 +48,7 @@ public class Receiver implements Callable<Integer> {
                     Peer.ReceiveChunk(chunk);
                 } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
                     Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
-                    System.err.println(bitSetMap);
+                    System.out.println(bitSetMap);
                 } else {
                     throw new Exception("Received object type is not recognized");
                 }
