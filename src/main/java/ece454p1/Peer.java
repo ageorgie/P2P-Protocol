@@ -102,7 +102,7 @@ public class Peer {
         return 0;
     };
 
-//	public int query(Status status){};
+	public static int query(Status status){return -1;};
 
 
 	/*
@@ -134,9 +134,20 @@ public class Peer {
 	private State currentState;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new Peer(args[0], Integer.parseInt(args[1]));
-        System.out.println(Peer.peers.getPeerFileMap());
-        Peer.join();
+//        new Peer(args[0], Integer.parseInt(args[1]));
+//        System.out.println(Peer.peers.getPeerFileMap());
+//        Peer.join();
+
+        while(true) {
+            System.out.print(">>");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                executeCommand(br.readLine());
+            } catch (IOException ioe) {
+                System.out.println("Error while buffering input");
+                System.exit(1);
+            }
+        }
     }
 
     public static void executeCommand(String command) throws IOException, InterruptedException {
@@ -149,6 +160,8 @@ public class Peer {
                 Peer.leave();
             case insert:
                 Peer.insert(split[1]);
+            case query:
+                Peer.query(null);
             default:
                 System.out.println("Command not supported");
         }
