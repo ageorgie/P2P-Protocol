@@ -162,16 +162,22 @@ public class Peer {
                     int port = Integer.parseInt(split[2]);
                     new Peer(host, port);
                 }
+                break;
             case join:
                 Peer.join();
+                break;
             case leave:
                 Peer.leave();
+                break;
             case insert:
                 Peer.insert(split[1]);
+                break;
             case query:
                 Peer.query(null);
+                break;
             default:
                 System.out.println("Command not supported");
+                break;
         }
 
     }
