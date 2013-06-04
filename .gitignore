@@ -1,5 +1,7 @@
 *.class
 .DS_STORE
+src/.DS_Store
+src/main/.DS_Store
 .idea
 # Package Files #
 *.jar
