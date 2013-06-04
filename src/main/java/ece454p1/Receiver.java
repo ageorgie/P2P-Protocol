@@ -3,12 +3,14 @@ package ece454p1;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 import java.util.BitSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -29,18 +31,15 @@ public class Receiver implements Callable<Integer> {
     public Integer call() throws Exception {
         try {
             while(true) {
-    //            System.out.println(serverSocket.isClosed());
                 Socket client = serverSocket.accept();
-                ObjectInputStream ois;
                 Object obj = new Object();
-		
-                SocketChannel channel = client.getChannel();
-		if(channel==null) {
-		    continue;
-		}
+								
+								InputStream is = client.getInputStream();
+								ObjectInputStream ois = new ObjectInputStream(is);
+								
                 try {
-                    ois = new ObjectInputStream(Channels.newInputStream(channel));
                     obj = ois.readObject();
+                		System.out.println(obj.getClass());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -48,8 +47,9 @@ public class Receiver implements Callable<Integer> {
                 if(obj.getClass().isAssignableFrom(Chunk.class)) {
                     Chunk chunk = (Chunk) obj;
                     Peer.ReceiveChunk(chunk);
-                } else if (obj.getClass().isAssignableFrom(Map.class)) {
+                } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
                     Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
+                    System.out.println(bitSetMap);
                 } else {
                     throw new Exception("Received object type is not recognized");
                 }
