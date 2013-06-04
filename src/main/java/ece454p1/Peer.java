@@ -154,6 +154,14 @@ public class Peer {
         String[] split = command.split(" ");
         Command commandEnum = Command.valueOf(split[0]);
         switch (commandEnum) {
+            case sethost:
+                if(split.length <3) {
+                    System.out.println("Please enter correct host and port.");
+                } else {
+                    String host = split[1];
+                    int port = Integer.parseInt(split[2]);
+                    new Peer(host, port);
+                }
             case join:
                 Peer.join();
             case leave:
@@ -170,6 +178,7 @@ public class Peer {
 
 
      public enum Command {
+         sethost,
          join,
          leave,
          insert,
