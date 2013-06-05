@@ -92,7 +92,6 @@ public class Sender implements Callable<Integer> {
     public Integer call() throws Exception {
        try {
            while(true) {
-               System.out.println("In sender while loop");
 //                Object obj = sendQueue.take();
 //                if(obj.getClass().isAssignableFrom(Chunk.class)) {
 //                    Chunk chunk = (Chunk) obj;
