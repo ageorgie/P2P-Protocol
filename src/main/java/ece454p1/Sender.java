@@ -28,12 +28,12 @@ public class Sender implements Callable<Integer> {
             Iterator<String> i = peerAddresses.iterator();
             while(i.hasNext()) {
                 String peerAddress = i.next();
-                System.out.printf("Peeraddress: %s", peerAddress);
+                System.out.printf("Sender: Peeraddress: %s\n", peerAddress);
                 String[] split = peerAddress.split(" ");
                 String host = split[0];
                 int port = Integer.parseInt(split[1]);
-                if(host==Peer.host && port==Peer.port) {
-                    System.out.println("Tried to connect to self. Skipping address.");
+                if(host.equals(Peer.host) && port==Peer.port) {
+                    System.out.println("Sender: Tried to connect to self. Skipping address.");
                     i.remove();
                     continue;
                 }
