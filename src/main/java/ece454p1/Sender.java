@@ -92,6 +92,7 @@ public class Sender implements Callable<Integer> {
     public Integer call() throws Exception {
        try {
            while(true) {
+               System.out.println("In sender while loop");
 //                Object obj = sendQueue.take();
 //                if(obj.getClass().isAssignableFrom(Chunk.class)) {
 //                    Chunk chunk = (Chunk) obj;
@@ -106,6 +107,7 @@ public class Sender implements Callable<Integer> {
 //                }
                for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                    String peerAddress = entry.getKey();
+                   System.out.printf("In sender for loop: peeraddress: %s\n", peerAddress);
                    PriorityQueue<String> priorityQueue = entry.getValue();
                    if(!priorityQueue.isEmpty()) {
                        String[] pollSplit = priorityQueue.poll().split("_");
