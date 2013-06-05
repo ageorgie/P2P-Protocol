@@ -16,43 +16,43 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Sender implements Callable<Integer> {
 
-    Map<String, Socket> sockets;
     static Map<String, PriorityQueue<String>> priorityQueueMap;
 
 
     public Sender() throws IOException, InterruptedException {
-        sockets = new HashMap<String, Socket>();
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
         priorityQueueMap.put(Peer.getHostAndPort(), new PriorityQueue<String>());
         List<String> peerAddresses = Peer.getPeers().getPeerAddresses();
         insertPeerFileMapIntoPriorityQueue();
-        int numTrials = 0;
-        while(!peerAddresses.isEmpty() && numTrials<5) {
-            Iterator<String> i = peerAddresses.iterator();
-            while(i.hasNext()) {
-                String peerAddress = i.next();
-                System.out.printf("Sender: Peeraddress: %s\n", peerAddress);
-                String[] split = peerAddress.split(" ");
-                String host = split[0];
-                int port = Integer.parseInt(split[1]);
-                if(host.toLowerCase().equals(Peer.host.toLowerCase()) && port==Peer.port) {
-                    System.out.println("Sender: Tried to connect to self. Skipping address.");
-                    i.remove();
-                    continue;
-                }
-                try {
-                    sockets.put(peerAddress, new Socket(host, port));
-                    System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
-                    i.remove();
-                } catch (ConnectException e) {
-                    System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
-                    numTrials++;
-                    Thread.sleep(5000);
-                }
-            }
-            numTrials++;
-        }
+//        int numTrials = 0;
+//        while(!peerAddresses.isEmpty() && numTrials<5) {
+//            Iterator<String> i = peerAddresses.iterator();
+//            while(i.hasNext()) {
+//                String peerAddress = i.next();
+//                System.out.printf("Sender: Peeraddress: %s\n", peerAddress);
+//                String[] split = peerAddress.split(" ");
+//                String host = split[0];
+//                int port = Integer.parseInt(split[1]);
+//                if(host.toLowerCase().equals(Peer.host.toLowerCase()) && port==Peer.port) {
+//                    System.out.println("Sender: Tried to connect to self. Skipping address.");
+//                    i.remove();
+//                    continue;
+//                }
+//                try {
+//                    sockets.put(peerAddress, new Socket(host, port));
+//                    System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
+//                    i.remove();
+//                } catch (ConnectException e) {
+//                    System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
+//                    numTrials++;
+//                    Thread.sleep(5000);
+//                }
+//            }
+//            numTrials++;
+//        }
     }
+
+
     public static void insertPeerFileMapIntoPriorityQueue() {
         System.out.println("inserting priority map into queue");
         for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
@@ -82,60 +82,49 @@ public class Sender implements Callable<Integer> {
         }
     }
 
-    public static void send(Socket socket, Serializable object) throws IOException {
+    public static void send(String host, int port, Serializable object) throws IOException {
+        Socket socket = new Socket(host, port);
         OutputStream os = socket.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(object);
         oos.close();
         os.close();
+        socket.close();
+    }
+
+    public static void sendPeerFileMap() throws IOException {
+        List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
+        for(String address: addresses) {
+            String[] split = address.split(" ");
+            send(split[0], Integer.getInteger(split[1]), (Serializable) Peer.getPeers().getPeerFileMap());
+        }
     }
 
     public Integer call() throws Exception {
-       try {
-           while(true) {
-//                Object obj = sendQueue.take();
-//                if(obj.getClass().isAssignableFrom(Chunk.class)) {
-//                    Chunk chunk = (Chunk) obj;
-//                    send(sockets.get(chunk.getDestination()), chunk);
-//                } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
-//                    Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
-//                    for(Socket socket:sockets.values()) {
-//                        send(socket, (Serializable) bitSetMap);
-//                    }
-//                } else {
-//                    throw new Exception("Received object type is not recognized");
-//                }
-               for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
-                   String peerAddress = entry.getKey();
-                   System.out.printf("In sender for loop: peeraddress: %s\n", peerAddress);
-                   PriorityQueue<String> priorityQueue = entry.getValue();
-                   if(!priorityQueue.isEmpty()) {
-                       String[] pollSplit = priorityQueue.poll().split("_");
-                       if(pollSplit[1]=="!!PeerFileMap!!") {
-                           for(Socket socket:sockets.values()) {
-                               System.out.println("sending priority map");
-                               send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
-                           }
-                       } else {
-                           String fileName = pollSplit[1];
-                           int chunkNum = Integer.parseInt(pollSplit[2]);
-                           String destination = pollSplit[3];
-                           System.out.printf("sending chunk %s\n", pollSplit);
-                           Socket destinationSocket = sockets.get(destination);
-                           if(destination == null) {
-                               throw new Exception(String.format("Socket for destination address %s does not exist", destination));
-                           }
-                           Chunk chunk = new Chunk(fileName, chunkNum);
-                           send(destinationSocket, chunk);
+
+       while(true) {
+           for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+               String peerAddress = entry.getKey();
+               System.out.printf("In sender for loop: peeraddress: %s\n", peerAddress);
+               PriorityQueue<String> priorityQueue = entry.getValue();
+               if(!priorityQueue.isEmpty()) {
+                   String[] pollSplit = priorityQueue.poll().split("_");
+                   if(pollSplit[1]=="!!PeerFileMap!!") {
+                       sendPeerFileMap();
+                   } else {
+                       String fileName = pollSplit[1];
+                       int chunkNum = Integer.parseInt(pollSplit[2]);
+                       String destination = pollSplit[3];
+                       if(destination == null) {
+                           throw new Exception(String.format("Socket for destination address %s does not exist", destination));
                        }
+                       String[] split = destination.split(" ");
+                       Chunk chunk = new Chunk(fileName, chunkNum);
+                       System.out.printf("sending chunk %s\n", pollSplit);
+                       send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }
-            }
-       } catch(Exception e) {
-           for(Socket socket:sockets.values()) {
-               socket.close();
            }
-           throw  e;
-       }
+        }
     }
 }

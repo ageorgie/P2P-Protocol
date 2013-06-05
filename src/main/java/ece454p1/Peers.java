@@ -130,6 +130,18 @@ public class Peers implements Serializable {
         }
     }
 
+    public List<String> getOtherPeerAddresses() {
+        List<String> output = new LinkedList<String>();
+        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
+            String[] split = entry.getKey().split(" ");
+            if(!split[0].toLowerCase().equals(Peer.host.toLowerCase()) || !(Integer.parseInt(split[1]) == Peer.port)) {
+                output.add(entry.getKey());
+            }
+        }
+        return output;
+    }
+
+
     public List<String> getPeerAddresses() {
         List<String> output = new LinkedList<String>();
         for(Map.Entry entry:peerFileMap.entrySet()) {
