@@ -21,8 +21,9 @@ public class Sender implements Callable<Integer> {
 
     public Sender() throws IOException, InterruptedException {
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
-        priorityQueueMap.put(Peer.getHostAndPort(), new PriorityQueue<String>());
-        List<String> peerAddresses = Peer.getPeers().getPeerAddresses();
+        for(String address: Peer.getPeers().getOtherPeerAddresses()) {
+            priorityQueueMap.put(address, new PriorityQueue<String>());
+        }
         insertPeerFileMapIntoPriorityQueue();
 //        int numTrials = 0;
 //        while(!peerAddresses.isEmpty() && numTrials<5) {
