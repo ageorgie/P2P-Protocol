@@ -52,6 +52,9 @@ public class Peers implements Serializable {
             } else {
                 peerFileMap.put(remoteHost, bitSetMap);
             }
+            fillReplicationMap();
+            Sender.emptyPriorityQueues();
+            fillPriorityQueues();
         }
     }
 
@@ -74,10 +77,26 @@ public class Peers implements Serializable {
         }
     }
 
-
     public void fillPriorityQueues() {
-        for(Map<String,>)
-    }
+        for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
+            // Peer address to bitset map for a given filename
+            String fileName = entry.getKey();
+            int[] replicationFactorArray = entry.getValue();
+            Map<String, BitSet> peerToBitSetMap = new HashMap<String, BitSet>();
+
+            for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
+                peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
+            }
+
+            for(int i=0; i<replicationFactorArray.length; i++) {
+                for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
+                    if(!peerToBitSetEntry.getValue().get(i)) {
+                        Sender.insertChunkIntoPriorityQueue(peerToBitSetEntry.getKey(), fileName, i, replicationFactorArray[i]);
+                    }
+                }
+           }
+        }
+}
 
 
 

@@ -1,5 +1,7 @@
 package ece454p1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -23,6 +25,14 @@ public class Chunk implements Serializable {
 
     public String getDestination() {
         return destination;
+    }
+
+    public Chunk(String fileName, int chunkNum) throws FileNotFoundException {
+        File file = Peer.getFileMap().get(fileName);
+        if(file==null) {
+            throw new FileNotFoundException();
+        }
+
     }
 
     public Chunk(String fileName, int chunkNum, int totalNumChunks, byte[] byteArray) {

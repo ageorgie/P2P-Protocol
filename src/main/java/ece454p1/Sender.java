@@ -33,12 +33,36 @@ public class Sender implements Callable<Integer> {
                 try {
                     sockets.put(peerAddress, new Socket(host, port));
                     connectionAccepted = true;
-                    System.out.printf("Connection accepted : Ready for transfer");
+                    System.out.printf("Connection accepted : Ready for transfer\n");
                 } catch (ConnectException e) {
                     System.out.printf("Connection refused for %s : %d ... retrying\n", host, port);
                     Thread.sleep(5000);
                 }
             }
+        }
+    }
+    public static void insertPeerFileMapIntoPriorityQueue() {
+        for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
+            priorityQueue.offer(String.format("%s_!PeerFileMap!", 0));
+        }
+    }
+
+    public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, Integer priority) {
+        if(!priorityQueueMap.containsKey(peerAddress)) {
+            priorityQueueMap.put(peerAddress, new PriorityQueue<String>(100, new StringComparator()));
+        }
+        priorityQueueMap.get(peerAddress).offer(String.format("%s_%s_%s", priority, fileName, chunkNum));
+    }
+
+    public static void emptyPriorityQueues() {
+        for(PriorityQueue priorityQueue:priorityQueueMap.values()) {
+            priorityQueue.clear();
+        }
+    }
+
+    public static class StringComparator implements Comparator<String> {
+        public int compare(String s1, String s2) {
+            return s1.compareTo(s2);
         }
     }
 
@@ -57,18 +81,36 @@ public class Sender implements Callable<Integer> {
     public Integer call() throws Exception {
        try {
            while(true) {
-                Object obj = sendQueue.take();
-                if(obj.getClass().isAssignableFrom(Chunk.class)) {
-                    Chunk chunk = (Chunk) obj;
-                    send(sockets.get(chunk.getDestination()), chunk);
-                } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
-                    Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
-                    for(Socket socket:sockets.values()) {
-                        send(socket, (Serializable) bitSetMap);
-                    }
-                } else {
-                    throw new Exception("Received object type is not recognized");
-                }
+//                Object obj = sendQueue.take();
+//                if(obj.getClass().isAssignableFrom(Chunk.class)) {
+//                    Chunk chunk = (Chunk) obj;
+//                    send(sockets.get(chunk.getDestination()), chunk);
+//                } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
+//                    Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
+//                    for(Socket socket:sockets.values()) {
+//                        send(socket, (Serializable) bitSetMap);
+//                    }
+//                } else {
+//                    throw new Exception("Received object type is not recognized");
+//                }
+               for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+                   String peerAddress = entry.getKey();
+                   PriorityQueue<String> priorityQueue = entry.getValue();
+                   if(!priorityQueue.isEmpty()) {
+                       String[] pollSplit = priorityQueue.poll().split("-");
+                       if(pollSplit[1]=="!!PeerFileMap||") {
+                           for(Socket socket:sockets.values()) {
+                               send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
+                           }
+                       } else {
+                           String fileName = pollSplit[1];
+                           int chunkNum = Integer.parseInt(pollSplit[2]);
+
+                       }
+
+                   }
+
+               }
             }
        } catch(Exception e) {
            for(Socket socket:sockets.values()) {

@@ -150,6 +150,10 @@ public class Peer {
         }
     }
 
+    public static Map<String, File> getFileMap() {
+        return fileMap;
+    }
+
     public static void executeCommand(String command) throws IOException, InterruptedException {
         String[] split = command.split(" ");
         Command commandEnum = Command.valueOf(split[0]);
@@ -163,6 +167,7 @@ public class Peer {
                     new Peer(host, port);
                 }
             case join:
+
                 Peer.join();
             case leave:
                 Peer.leave();
