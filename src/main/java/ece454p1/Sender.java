@@ -32,7 +32,7 @@ public class Sender implements Callable<Integer> {
                 String[] split = peerAddress.split(" ");
                 String host = split[0];
                 int port = Integer.parseInt(split[1]);
-                if(host.equals(Peer.host) && port==Peer.port) {
+                if(host.toLowerCase().equals(Peer.host.toLowerCase()) && port==Peer.port) {
                     System.out.println("Sender: Tried to connect to self. Skipping address.");
                     i.remove();
                     continue;
