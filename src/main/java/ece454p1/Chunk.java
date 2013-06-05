@@ -19,6 +19,11 @@ public class Chunk implements Serializable {
     byte[] byteArray = new byte[Config.CHUNK_SIZE];
     Map<String, Map<String, BitSet>> peerFileMap;
     int totalNumChunks;
+    String destination;
+
+    public String getDestination() {
+        return destination;
+    }
 
     public Chunk(String fileName, int chunkNum, int totalNumChunks, byte[] byteArray) {
         this.fileName = fileName;

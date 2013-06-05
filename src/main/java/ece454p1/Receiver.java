@@ -49,6 +49,7 @@ public class Receiver implements Callable<Integer> {
                     Peer.ReceiveChunk(chunk);
                 } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
                     Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
+                    Peer.getPeers().updatePeerFileMap(bitSetMap);
                     System.out.println(bitSetMap);
                 } else {
                     throw new Exception("Received object type is not recognized");

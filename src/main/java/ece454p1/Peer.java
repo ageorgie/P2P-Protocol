@@ -83,7 +83,7 @@ public class Peer {
            throw ex;
         }
 
-        peers.updatePeerFileMap(chunk);
+//        peers.updatePeerFileMap(chunk);
     }
 
 
