@@ -32,7 +32,7 @@ public class Receiver implements Callable<Integer> {
         try {
             while(true) {
                 Socket client = serverSocket.accept();
-                System.out.println("Receiver: New connection accepted.")
+                System.out.println("Receiver: New connection accepted.");
                 Object obj = new Object();
 								
 								InputStream is = client.getInputStream();
