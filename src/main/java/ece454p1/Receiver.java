@@ -39,13 +39,13 @@ public class Receiver implements Callable<Integer> {
 //                emptyMap.put(client.)
 //                Peer.getPeers().updatePeerFileMap();
                 Object obj = new Object();
-                System.out.println("before inputstream");
                 InputStream is = client.getInputStream();
-                System.out.println("after inputstream");
                 ObjectInputStream ois = new ObjectInputStream(is);
 
                 try {
+                    System.out.println("before readobject");
                     obj = ois.readObject();
+                    System.out.println("after readobject");
                 		System.out.println(obj.getClass());
                 } catch (Exception ex) {
                     ex.printStackTrace();
