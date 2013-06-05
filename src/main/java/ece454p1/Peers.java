@@ -90,8 +90,9 @@ public class Peers implements Serializable {
 
             for(int i=0; i<replicationFactorArray.length; i++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
+                    String peerAddress = peerToBitSetEntry.getKey();
                     if(!peerToBitSetEntry.getValue().get(i)) {
-                        Sender.insertChunkIntoPriorityQueue(peerToBitSetEntry.getKey(), fileName, i, replicationFactorArray[i]);
+                        Sender.insertChunkIntoPriorityQueue(peerToBitSetEntry.getKey(), fileName, i, peerAddress, replicationFactorArray[i]);
                     }
                 }
            }

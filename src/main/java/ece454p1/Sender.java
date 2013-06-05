@@ -47,11 +47,11 @@ public class Sender implements Callable<Integer> {
         }
     }
 
-    public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, Integer priority) {
+    public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, String destinationAddress, Integer priority) {
         if(!priorityQueueMap.containsKey(peerAddress)) {
             priorityQueueMap.put(peerAddress, new PriorityQueue<String>(100, new StringComparator()));
         }
-        priorityQueueMap.get(peerAddress).offer(String.format("%s_%s_%s", priority, fileName, chunkNum));
+        priorityQueueMap.get(peerAddress).offer(String.format("%s_%s_%s_%s", priority, fileName, chunkNum, destinationAddress));
     }
 
     public static void emptyPriorityQueues() {
@@ -97,19 +97,23 @@ public class Sender implements Callable<Integer> {
                    String peerAddress = entry.getKey();
                    PriorityQueue<String> priorityQueue = entry.getValue();
                    if(!priorityQueue.isEmpty()) {
-                       String[] pollSplit = priorityQueue.poll().split("-");
-                       if(pollSplit[1]=="!!PeerFileMap||") {
+                       String[] pollSplit = priorityQueue.poll().split("_");
+                       if(pollSplit[1]=="!!PeerFileMap!!") {
                            for(Socket socket:sockets.values()) {
                                send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
                            }
                        } else {
                            String fileName = pollSplit[1];
                            int chunkNum = Integer.parseInt(pollSplit[2]);
-
+                           String destination = pollSplit[3];
+                           Socket destinationSocket = sockets.get(destination);
+                           if(destination == null) {
+                               throw new Exception(String.format("Socket for destination address %s does not exist", destination));
+                           }
+                           Chunk chunk = new Chunk(fileName, chunkNum);
+                           send(destinationSocket, chunk);
                        }
-
                    }
-
                }
             }
        } catch(Exception e) {

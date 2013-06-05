@@ -1,8 +1,6 @@
 package ece454p1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,25 +18,29 @@ public class Chunk implements Serializable {
     int chunkNum;
     byte[] byteArray = new byte[Config.CHUNK_SIZE];
     Map<String, Map<String, BitSet>> peerFileMap;
-    int totalNumChunks;
     String destination;
 
     public String getDestination() {
         return destination;
     }
 
-    public Chunk(String fileName, int chunkNum) throws FileNotFoundException {
+    public Chunk(String fileName, int chunkNum) throws IOException {
         File file = Peer.getFileMap().get(fileName);
         if(file==null) {
             throw new FileNotFoundException();
         }
-
-    }
-
-    public Chunk(String fileName, int chunkNum, int totalNumChunks, byte[] byteArray) {
         this.fileName = fileName;
         this.chunkNum = chunkNum;
-        this.totalNumChunks = totalNumChunks;
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
+        dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
+        for(int i=0; i<Config.CHUNK_SIZE; i++) {
+            byteArray[i] = dataInputStream.readByte();
+        }
+    }
+
+    public Chunk(String fileName, int chunkNum, byte[]byteArray) {
+        this.fileName = fileName;
+        this.chunkNum = chunkNum;
         this.byteArray = byteArray;
     }
 
@@ -57,14 +59,6 @@ public class Chunk implements Serializable {
 
     public void setChunkNum(int chunkNum) {
         this.chunkNum = chunkNum;
-    }
-
-    public int getTotalNumChunks() {
-        return totalNumChunks;
-    }
-
-    public void setTotalNumChunks(int totalNumChunks) {
-        this.totalNumChunks = totalNumChunks;
     }
 
     public byte[] getByteArray() {
