@@ -83,7 +83,16 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void send(String host, int port, Serializable object) throws IOException {
-        Socket socket = new Socket(host, port);
+        System.out.printf("Send called for host:%s, port %d\n", host, port);
+        Socket socket;
+        try {
+            socket = new Socket(host, port);
+            System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
+        } catch(ConnectException e) {
+            System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
+            throw e;
+
+        }
         OutputStream os = socket.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(object);
@@ -93,6 +102,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void sendPeerFileMap() throws IOException {
+        System.out.println("SendPeerFileMap called");
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
         for(String address: addresses) {
             String[] split = address.split(" ");
