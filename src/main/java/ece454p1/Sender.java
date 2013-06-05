@@ -33,9 +33,9 @@ public class Sender implements Callable<Integer> {
                 try {
                     sockets.put(peerAddress, new Socket(host, port));
                     connectionAccepted = true;
-                    System.out.printf("Connection accepted for %s: %d - Ready for transfer\n", host, port);
+                    System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
                 } catch (ConnectException e) {
-                    System.out.printf("Connection refused for %s : %d ... retrying\n", host, port);
+                    System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
                     Thread.sleep(5000);
                 }
             }
