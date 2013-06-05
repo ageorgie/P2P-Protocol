@@ -52,7 +52,7 @@ public class Sender implements Callable<Integer> {
     }
     public static void insertPeerFileMapIntoPriorityQueue() {
         for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
-            priorityQueue.offer(String.format("%s_!PeerFileMap!", 0));
+            priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
         }
     }
 

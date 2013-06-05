@@ -113,6 +113,8 @@ public class Peer {
 
         executorService.submit(new Receiver(port));
         executorService.submit(new Sender());
+        executorService.submit(new StateBroadcaster());
+
         return 1;
     };
 

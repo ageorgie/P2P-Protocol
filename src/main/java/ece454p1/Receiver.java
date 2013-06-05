@@ -40,7 +40,7 @@ public class Receiver implements Callable<Integer> {
 //                Peer.getPeers().updatePeerFileMap();
                 Object obj = new Object();
                 InputStream is = client.getInputStream();
-                System.out.println("before ois");
+                System.out.printf("inputstream.available: %d\n", is.available());
                 ObjectInputStream ois = new ObjectInputStream(is);
                 System.out.println("after ois");
 
