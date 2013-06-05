@@ -23,6 +23,7 @@ public class Sender implements Callable<Integer> {
     public Sender() throws IOException, InterruptedException {
         sockets = new HashMap<String, Socket>();
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
+        priorityQueueMap.put(Peer.getHostAndPort(), new PriorityQueue<String>());
         List<String> peerAddresses = Peer.getPeers().getPeerAddresses();
         insertPeerFileMapIntoPriorityQueue();
         int numTrials = 0;
