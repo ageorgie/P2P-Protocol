@@ -51,16 +51,20 @@ public class Sender implements Callable<Integer> {
         }
     }
     public static void insertPeerFileMapIntoPriorityQueue() {
+        System.out.println("inserting priority map into queue");
         for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
             priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
         }
     }
 
     public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, String destinationAddress, Integer priority) {
+
         if(!priorityQueueMap.containsKey(peerAddress)) {
             priorityQueueMap.put(peerAddress, new PriorityQueue<String>(100, new StringComparator()));
         }
-        priorityQueueMap.get(peerAddress).offer(String.format("%s_%s_%s_%s", priority, fileName, chunkNum, destinationAddress));
+        String chunkIdentifier = String.format("%s_%s_%s_%s", priority, fileName, chunkNum, destinationAddress);
+        System.out.printf("inserting chunk %s\n", chunkIdentifier);
+        priorityQueueMap.get(peerAddress).offer(chunkIdentifier);
     }
 
     public static void emptyPriorityQueues() {
@@ -105,12 +109,14 @@ public class Sender implements Callable<Integer> {
                        String[] pollSplit = priorityQueue.poll().split("_");
                        if(pollSplit[1]=="!!PeerFileMap!!") {
                            for(Socket socket:sockets.values()) {
+                               System.out.println("sending priority map");
                                send(socket, (Serializable) Peer.getPeers().getPeerFileMap());
                            }
                        } else {
                            String fileName = pollSplit[1];
                            int chunkNum = Integer.parseInt(pollSplit[2]);
                            String destination = pollSplit[3];
+                           System.out.printf("sending chunk %s\n", pollSplit);
                            Socket destinationSocket = sockets.get(destination);
                            if(destination == null) {
                                throw new Exception(String.format("Socket for destination address %s does not exist", destination));
