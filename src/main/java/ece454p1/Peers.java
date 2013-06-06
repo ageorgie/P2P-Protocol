@@ -72,14 +72,6 @@ public class Peers implements Serializable {
                 String fileName = (String) entry.getKey();
                 BitSet bitSet = (BitSet) entry.getValue();
 
-                //find the length of the bitset
-                String bitsetStr = bitSet.toString().replace("{", "").replace("}","");
-                int length = 0;
-                if(bitsetStr.contains(",")) {
-                    length = bitsetStr.split(",").length;
-                } else if(!bitsetStr.isEmpty()) {
-                    length = 1;
-                }
                 System.out.printf("filename: %s, bitset:%s, bitset length: %d\n", fileName, bitSet, bitSet.length() - 1);
 
                 //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
@@ -90,7 +82,7 @@ public class Peers implements Serializable {
                 if(replicationMap.containsKey(fileName)) {
                     fileReplicationArray = replicationMap.get(fileName);
                 } else {
-                    fileReplicationArray = new int[bitSet.toString().split(",").length];
+                    fileReplicationArray = new int[bitSet.length() - 1];
                 }
                 for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
                     fileReplicationArray[i] += 1;
