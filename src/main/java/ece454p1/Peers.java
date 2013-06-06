@@ -1,5 +1,6 @@
 package ece454p1;
 
+import javax.sound.midi.SysexMessage;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -113,16 +114,19 @@ public class Peers implements Serializable {
             }
             System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
+            System.out.printf("replicationFactorArray: %s", Arrays.toString(replicationFactorArray));
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
-
                     String peerAddress = peerToBitSetEntry.getKey();
                     boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
                     System.out.printf("#%d, %s -> %s , ", chunkNum, peerAddress, replicationFactor);
                     if(!replicationFactor) {
+                        System.out.println("yay, got into if statement");
                         Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum]);
                     }
+                    System.out.println("wtf");
                 }
+                System.out.println("fuck this");
            }
         }
         System.out.printf("fillPriorityQueues finished\n");
