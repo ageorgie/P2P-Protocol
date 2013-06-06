@@ -80,7 +80,7 @@ public class Peers implements Serializable {
                 } else if(!bitsetStr.isEmpty()) {
                     length = 1;
                 }
-                System.out.printf("bitset size: %d\n", length);
+                System.out.printf("filename: %s, bitset:%s, bitset length: %d, bitset size: %s\n", fileName, bitSet, length, bitSet.size());
 
                 //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
                 // We check if replicationMap is already existing for the file.
