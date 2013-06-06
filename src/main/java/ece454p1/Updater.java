@@ -41,8 +41,9 @@ public class Updater implements Callable<Integer> {
             Peer.ReceiveChunk(chunk);
         } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
             Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
+            System.out.printf("Received %s", bitSetMap);
             Peer.getPeers().updatePeerFileMap(bitSetMap);
-            System.out.println(bitSetMap);
+            System.out.printf("My own peerfilemap after update: %s", Peer.getFileMap());
         } else {
             throw new Exception("Received object type is not recognized");
         }
