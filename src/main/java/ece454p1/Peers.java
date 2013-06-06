@@ -30,8 +30,10 @@ public class Peers implements Serializable {
 
         // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
+
             String receivedRemoteHost = entry.getKey();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
+            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
