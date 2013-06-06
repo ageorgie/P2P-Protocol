@@ -34,17 +34,16 @@ public class Peers implements Serializable {
                 for(Map.Entry<String, BitSet> bitSetEntry: bitSetMap.entrySet()) {
                     String fileName = bitSetEntry.getKey();
                     BitSet receivedBitSet = bitSetEntry.getValue();
-                    BitSet bitSet = bitSetMap.get(fileName);
                     if(bitSetMap.containsKey(fileName)) {
-                        receivedBitSet.or(bitSet);
-                    } else  {
-                        bitSetMap.put(fileName, receivedBitSet);
+                        peerFileMap.get(remoteHost).get(fileName).or(receivedBitSet);
                     }
-                    for (int i = receivedBitSet.nextSetBit(0); i >= 0; i = receivedBitSet.nextSetBit(i+1)) {
-                        bitSet.set(i, true);
-//                        String chunkId = String.format("%s,%s", fileName, i);
-//                        insertIntoReplicationMap(chunkId);
-                    }
+//                    peerFileMap.get(entry.getKey()).put(fileName, receivedBitSet);
+
+//                    for (int i = receivedBitSet.nextSetBit(0); i >= 0; i = receivedBitSet.nextSetBit(i+1)) {
+//                        bitSet.set(i, true);
+////                        String chunkId = String.format("%s,%s", fileName, i);
+////                        insertIntoReplicationMap(chunkId);
+//                    }
 
                 }
             } else {
