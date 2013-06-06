@@ -135,7 +135,7 @@ public class Peers implements Serializable {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
                     System.out.println("Everybody fired up this evening");
                     entry.getValue().put(fileName, new BitSet(numChunks));
-                    System.out.printf("Host, Port: %s, Bitset: %s", Peer.getHostAndPort(), entry.getValue().get(fileName));
+                    System.out.printf("Host, Port: %s, Bitset: %s", Peer.getHostAndPort(), entry.getValue().get(fileName).toString());
                 } else {
                     entry.getValue().put(fileName, bitSet);
                 }
