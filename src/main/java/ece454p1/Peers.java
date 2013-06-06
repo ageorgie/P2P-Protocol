@@ -77,7 +77,7 @@ public class Peers implements Serializable {
             // Peer address to bitset map for a given filename
             String fileName = entry.getKey();
             int[] replicationFactorArray = entry.getValue();
-            System.out.printf("filename: %s, replicationFactorArray: %s\n", fileName, replicationFactorArray);
+            System.out.printf("filename: %s, replicationFactorArray: %s\n", fileName, Arrays.toString(replicationFactorArray));
             Map<String, BitSet> peerToBitSetMap = new HashMap<String, BitSet>();
 
 
