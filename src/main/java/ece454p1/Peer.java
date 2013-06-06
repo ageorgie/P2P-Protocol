@@ -92,6 +92,7 @@ public class Peer {
 	public static int insert(String filePath) {
 
         File file = new File(filePath);
+        System.out.println(file);
         if(!file.isFile() || !file.canRead()) {
             return -1;
         }
