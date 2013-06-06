@@ -84,9 +84,9 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void send(String host, int port, Serializable object) throws IOException {
-        System.out.printf("Send called for host:%s, port %d\n", host, port);
         Socket socket;
         try {
+            System.out.printf("Send called for host:%s, port %d\n", host, port);
             socket = new Socket(host, port);
             System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
         } catch(ConnectException e) {
@@ -108,9 +108,9 @@ public class Sender implements Callable<Integer> {
         for(String address: addresses) {
             String[] split = address.split(" ");
             System.out.printf("address: %s, %s\n", split[0], split[1]);
-            Map<String, Map<String, BitSet>> peerFileMap = Peer.getPeers().getPeerFileMap();
+            Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
             System.out.printf("peerfilemap: %s\n", peerFileMap);
-            Sender.send(split[0], Integer.getInteger(split[1]), (Serializable) Peer.getPeers().getPeerFileMap());
+            Sender.send(split[0], Integer.getInteger(split[1]), peerFileMap);
         }
         System.out.println("Exiting sendPeerFileMap");
     }
