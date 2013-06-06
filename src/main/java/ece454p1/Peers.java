@@ -133,11 +133,12 @@ public class Peers implements Serializable {
             System.out.print("\n");
             for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
-                    entry.getValue().put(fileName, new BitSet(numChunks));
+                    peerFileMap.get(entry.getKey()).put(fileName, new BitSet(numChunks));
                 } else {
-                    entry.getValue().put(fileName, bitSet);
+                    peerFileMap.get(entry.getKey()).put(fileName, bitSet);
                 }
             }
+
 
         }
     }
