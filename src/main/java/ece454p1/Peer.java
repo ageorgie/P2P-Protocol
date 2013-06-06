@@ -77,6 +77,7 @@ public class Peer {
                 FileChannel ch = out.getChannel();
                 ch.position(byteOffset);
                 ch.write(ByteBuffer.wrap(chunk.getByteArray()));
+                peers.updatePeerFileMap(chunk);
             } finally {
                 out.close();
             }
