@@ -133,17 +133,7 @@ public class Peers implements Serializable {
             System.out.print("\n");
             for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
-                    System.out.println("Everybody fired up this evening");
-                    BitSet zero = new BitSet(numChunks);
-                    entry.getValue().put(fileName, zero);
-                    for(int j=0; j<numChunks; j++) {
-                        if(entry.getValue().get(fileName).get(j)) {
-                            System.out.print("1");
-                        } else {
-                            System.out.print("0");
-                        }
-                    }
-                    System.out.printf("Host, Port: %s, Bitset: %s", Peer.getHostAndPort(), entry.getValue().get(fileName).toString());
+                    entry.getValue().put(fileName, new BitSet(numChunks));
                 } else {
                     entry.getValue().put(fileName, bitSet);
                 }
