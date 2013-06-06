@@ -47,10 +47,13 @@ public class Peers implements Serializable {
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
                         bitSet.or(receivedBitSet);
+                        System.out.printf("or'd bitset: %s", bitSet);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, bitSet);
+                        System.out.printf("peerfileMap after put: %s", peerFileMap);
                     } else {
-//                        System.out.printf("got into else: %s, %s\n", receivedFileName, receivedBitSet);
+                        System.out.printf("filename doesn't exist in peerfilemap for host: %s", receivedRemoteHost);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
+                        System.out.printf("peerfileMap after put: %s", peerFileMap);
                     }
                 }
             } else {
