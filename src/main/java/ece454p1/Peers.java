@@ -26,22 +26,30 @@ public class Peers implements Serializable {
     }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
+
+        // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
             String receivedRemoteHost = entry.getKey();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
+
+            // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
+
+                // If so, iterate through all received filenames and bitsets, and OR them, if we didn't use to have it, insert them
                 for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
                     String receivedFileName = receivedBitSetEntry.getKey();
                     BitSet receivedBitSet = receivedBitSetEntry.getValue();
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         peerFileMap.get(receivedRemoteHost).get(receivedFileName).or(receivedBitSet);
                     } else {
-                        peerFileMap.get(receivedRemoteHost).put(receivedFileName,receivedBitSet);
+                        peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
                     }
                 }
             } else {
                 peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
+
+            // Fill ReplicatioMap and Priority Queues
             fillReplicationMap();
             Sender.emptyPriorityQueues();
             fillPriorityQueues();
@@ -51,10 +59,14 @@ public class Peers implements Serializable {
 
     public void fillReplicationMap() {
         System.out.println("fillReplicationMapCalled");
-        for(Map<String, BitSet> fileBitSetMap:peerFileMap.values()) {
-            for(Map.Entry entry:fileBitSetMap.entrySet()) {
+        for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
+            for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
+
+                // For each file and its corresponding bitset
                 String fileName = (String) entry.getKey();
                 BitSet bitSet = (BitSet) entry.getValue();
+
+                //find the length of the bitset
                 String bitsetStr = bitSet.toString().replace("{", "").replace("}","");
                 int length = 0;
                 if(bitsetStr.contains(",")) {
@@ -63,6 +75,11 @@ public class Peers implements Serializable {
                     length = 1;
                 }
                 System.out.printf("bitset size: %d\n", length);
+
+                //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
+                // We check if replicationMap is already existing for the file.
+                // If not, just create a new array of zeros with the length of the bitset
+                // go through all the bits set to true in the bitset and increment the index of the fileReplicationArray
                 int[] fileReplicationArray;
                 if(replicationMap.containsKey(fileName)) {
                     fileReplicationArray = replicationMap.get(fileName);
@@ -82,7 +99,7 @@ public class Peers implements Serializable {
     public void fillPriorityQueues() {
         System.out.println("fillPriorityQueues called");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
-            // Peer address to bitset map for a given filename
+            // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
             int[] replicationFactorArray = entry.getValue();
             System.out.printf("filename: %s, replicationFactorArray: %s\n", fileName, Arrays.toString(replicationFactorArray));
@@ -130,7 +147,7 @@ public class Peers implements Serializable {
         System.out.printf("num chunks: %d\n", numChunks);
         Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         if(!localBitSetMap.containsKey(fileName)) {
-            BitSet bitSet = new BitSet();
+            BitSet bitSet = new BitSet(numChunks);
             for(int i = 0;i<numChunks; i++) {
                 bitSet.set(i);
             }
