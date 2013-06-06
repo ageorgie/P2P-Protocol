@@ -123,7 +123,7 @@ public class Peers implements Serializable {
             for(int i = 0;i<numChunks; i++) {
                 bitSet.flip(i);
             }
-            for(int j=0; j<bitSet.length(); j++) {
+            for(int j=0; j<numChunks; j++) {
                 if(bitSet.get(j)) {
                     System.out.print("1");
                 } else {
