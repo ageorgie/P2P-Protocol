@@ -119,11 +119,10 @@ public class Peers implements Serializable {
         System.out.printf("num chunks: %d\n", numChunks);
         Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         if(!localBitSetMap.containsKey(fileName)) {
-            BitSet bitSet = new BitSet(60);
-            for(int i = 0;i< bitSet.length() ; i++) {
+            BitSet bitSet = new BitSet(numChunks);
+            for(int i = 0;i<numChunks; i++) {
                 bitSet.flip(i);
             }
-            System.out.printf("New Bitset [%d]:", bitSet.length());
             for(int j=0; j<bitSet.length(); j++) {
                 if(bitSet.get(j)) {
                     System.out.print("1");
