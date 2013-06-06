@@ -59,7 +59,7 @@ public class Peers implements Serializable {
                 if(replicationMap.containsKey(fileName)) {
                     fileReplicationArray = replicationMap.get(fileName);
                 } else {
-                    fileReplicationArray = new int[bitSet.length()];
+                    fileReplicationArray = new int[bitSet.size()];
                 }
                 for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
                     fileReplicationArray[i] += 1;
@@ -67,7 +67,8 @@ public class Peers implements Serializable {
                 replicationMap.put(fileName, fileReplicationArray);
             }
         }
-        System.out.printf("fillReplicationMap finished: replicationMap: %s\n", replicationMap);
+        System.out.printf("fillReplicationMap finished\n");
+
     }
 
     public void fillPriorityQueues() {
@@ -81,6 +82,7 @@ public class Peers implements Serializable {
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
+            System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
             for(int i=0; i<replicationFactorArray.length; i++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
