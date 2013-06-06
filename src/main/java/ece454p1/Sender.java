@@ -34,13 +34,13 @@ public class Sender implements Callable<Integer> {
         }
     }
 
-    public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, String destinationAddress, Integer priority) {
-        if(!priorityQueueMap.containsKey(peerAddress)) {
-            priorityQueueMap.put(peerAddress, new PriorityQueue<String>(100, new StringComparator()));
+    public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, int chunkNum, Integer priority) {
+        if(!priorityQueueMap.containsKey(destinationAddress)) {
+            priorityQueueMap.put(destinationAddress, new PriorityQueue<String>(100, new StringComparator()));
         }
         String chunkIdentifier = String.format("%s_%s_%s_%s", priority, fileName, chunkNum, destinationAddress);
         System.out.printf("inserting chunk %s\n", chunkIdentifier);
-        priorityQueueMap.get(peerAddress).offer(chunkIdentifier);
+        priorityQueueMap.get(destinationAddress).offer(chunkIdentifier);
     }
 
     public static void emptyPriorityQueues() {

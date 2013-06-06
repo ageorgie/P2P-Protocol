@@ -77,8 +77,12 @@ public class Peers implements Serializable {
             // Peer address to bitset map for a given filename
             String fileName = entry.getKey();
             int[] replicationFactorArray = entry.getValue();
+            System.out.printf("filename: %s, replicationFactorArray: %s\n", fileName, replicationFactorArray);
             Map<String, BitSet> peerToBitSetMap = new HashMap<String, BitSet>();
 
+
+            // PeerToBitsetMap for the current filename contains a mapping of all peer addresses to the bitsets corresponding
+            // to this filename
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
@@ -88,7 +92,7 @@ public class Peers implements Serializable {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
                     if(!peerToBitSetEntry.getValue().get(i)) {
-                        Sender.insertChunkIntoPriorityQueue(peerToBitSetEntry.getKey(), fileName, i, peerAddress, replicationFactorArray[i]);
+                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, i, replicationFactorArray[i]);
                     }
                 }
            }
