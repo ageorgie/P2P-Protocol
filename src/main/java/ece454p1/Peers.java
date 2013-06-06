@@ -118,6 +118,7 @@ public class Peers implements Serializable {
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
+                    System.out.print("see, i  told you");
                     boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
                     System.out.printf("#%d, %s -> %s , ", chunkNum, peerAddress, replicationFactor);
                     if(!replicationFactor) {
