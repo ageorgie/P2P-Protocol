@@ -113,11 +113,14 @@ public class Peers implements Serializable {
             }
             System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
-            for(int i=0; i<replicationFactorArray.length; i++) {
+            for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
+
                     String peerAddress = peerToBitSetEntry.getKey();
-                    if(!peerToBitSetEntry.getValue().get(i)) {
-                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, i, replicationFactorArray[i]);
+                    boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
+                    System.out.printf("#%d, %s -> %s , ", chunkNum, peerAddress, replicationFactor);
+                    if(!replicationFactor) {
+                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum]);
                     }
                 }
            }
