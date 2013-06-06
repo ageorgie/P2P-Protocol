@@ -109,6 +109,8 @@ public class Sender implements Callable<Integer> {
         for(String address: addresses) {
             String[] split = address.split(" ");
             System.out.printf("address: %s, %s\n", split[0], split[1]);
+            Map<String, Map<String, BitSet>> peerFileMap = Peer.getPeers().getPeerFileMap();
+            System.out.printf("peerfilemap: %s\n", peerFileMap);
             send(split[0], Integer.getInteger(split[1]), (Serializable) Peer.getPeers().getPeerFileMap());
         }
     }
