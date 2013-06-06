@@ -137,7 +137,7 @@ public class Peers implements Serializable {
                     BitSet zero = new BitSet(numChunks);
                     entry.getValue().put(fileName, zero);
                     for(int j=0; j<numChunks; j++) {
-                        if(zero.get(j)) {
+                        if(entry.getValue().get(fileName).get(j)) {
                             System.out.print("1");
                         } else {
                             System.out.print("0");
