@@ -64,6 +64,7 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
+        replicationMap = new HashMap<String, int[]>();
         System.out.println("fillReplicationMapCalled");
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
             for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
