@@ -55,7 +55,7 @@ public class Peers implements Serializable {
             for(Map.Entry entry:fileBitSetMap.entrySet()) {
                 String fileName = (String) entry.getKey();
                 BitSet bitSet = (BitSet) entry.getValue();
-                System.out.printf("bitset size: %d\n", bitSet.size());
+                System.out.printf("bitset size: %d\n", bitSet.toString().split(",").length);
                 int[] fileReplicationArray;
                 if(replicationMap.containsKey(fileName)) {
                     fileReplicationArray = replicationMap.get(fileName);
