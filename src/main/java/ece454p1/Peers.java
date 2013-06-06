@@ -50,6 +50,7 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
+        System.out.println("fillReplicationMapCalled");
         for(Map<String, BitSet> fileBitSetMap:peerFileMap.values()) {
             for(Map.Entry entry:fileBitSetMap.entrySet()) {
                 String fileName = (String) entry.getKey();
@@ -65,9 +66,11 @@ public class Peers implements Serializable {
                 }
             }
         }
+        System.out.printf("fillReplicationMap finished: replicationMap: %s\n", replicationMap);
     }
 
     public void fillPriorityQueues() {
+        System.out.println("fillPriorityQueues called");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // Peer address to bitset map for a given filename
             String fileName = entry.getKey();
@@ -87,7 +90,8 @@ public class Peers implements Serializable {
                 }
            }
         }
-}
+        System.out.printf("fillPriorityQueues finished\n");
+    }
 
 
 

@@ -25,44 +25,16 @@ public class Sender implements Callable<Integer> {
             priorityQueueMap.put(address, new PriorityQueue<String>());
         }
         insertPeerFileMapIntoPriorityQueue();
-//        int numTrials = 0;
-//        while(!peerAddresses.isEmpty() && numTrials<5) {
-//            Iterator<String> i = peerAddresses.iterator();
-//            while(i.hasNext()) {
-//                String peerAddress = i.next();
-//                System.out.printf("Sender: Peeraddress: %s\n", peerAddress);
-//                String[] split = peerAddress.split(" ");
-//                String host = split[0];
-//                int port = Integer.parseInt(split[1]);
-//                if(host.toLowerCase().equals(Peer.host.toLowerCase()) && port==Peer.port) {
-//                    System.out.println("Sender: Tried to connect to self. Skipping address.");
-//                    i.remove();
-//                    continue;
-//                }
-//                try {
-//                    sockets.put(peerAddress, new Socket(host, port));
-//                    System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
-//                    i.remove();
-//                } catch (ConnectException e) {
-//                    System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
-//                    numTrials++;
-//                    Thread.sleep(5000);
-//                }
-//            }
-//            numTrials++;
-//        }
     }
 
 
     public static void insertPeerFileMapIntoPriorityQueue() {
-//        System.out.println("inserting priority map into queue");
         for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
             priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
         }
     }
 
     public static void insertChunkIntoPriorityQueue(String peerAddress, String fileName, int chunkNum, String destinationAddress, Integer priority) {
-
         if(!priorityQueueMap.containsKey(peerAddress)) {
             priorityQueueMap.put(peerAddress, new PriorityQueue<String>(100, new StringComparator()));
         }
@@ -85,28 +57,23 @@ public class Sender implements Callable<Integer> {
 
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
-        int numRetries = 0;
-        while(numRetries<3) {
-            try {
-                System.out.printf("Send called for host:%s, port %d\n", host, port);
-                socket = new Socket(host, port);
-                OutputStream os = socket.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(os);
-                oos.writeObject(object);
-                oos.close();
-                os.close();
-                socket.close();
-                System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
-                break;
-            } catch(ConnectException e) {
-                System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
-                numRetries++;
-            }
+        try {
+            System.out.printf("Send called for host:%s, port %d\n", host, port);
+            socket = new Socket(host, port);
+            OutputStream os = socket.getOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos.writeObject(object);
+            oos.close();
+            os.close();
+            socket.close();
+            System.out.printf("Sender: Object successfully transferred\n", host, port);
+        } catch(ConnectException e) {
+            System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
         }
+
     }
 
     public static void sendPeerFileMap() throws IOException {
-//        System.out.println("SendPeerFileMap called");
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
         for(String address: addresses) {
             String[] split = address.split(" ");
@@ -116,14 +83,13 @@ public class Sender implements Callable<Integer> {
     }
 
     public Integer call() throws Exception {
-
        while(true) {
            for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
                PriorityQueue<String> priorityQueue = entry.getValue();
                if(!priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-//                   System.out.printf("Poll: %s\n", poll);
+                   System.out.printf("Poll: %s\n", poll);
                    String[] pollSplit = poll.split("_");
 
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
