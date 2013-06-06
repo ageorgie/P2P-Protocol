@@ -40,10 +40,12 @@ public class Peers implements Serializable {
                 for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
                     String receivedFileName = receivedBitSetEntry.getKey();
                     BitSet receivedBitSet = receivedBitSetEntry.getValue();
+                    System.out.printf("peerfilemap: %s\n", peerFileMap);
+                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", peerFileMap, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         peerFileMap.get(receivedRemoteHost).get(receivedFileName).or(receivedBitSet);
                     } else {
-                        System.out.printf("got into else: %s, %s", receivedFileName, receivedBitSet);
+                        System.out.printf("got into else: %s, %s\n", receivedFileName, receivedBitSet);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
                     }
                 }
