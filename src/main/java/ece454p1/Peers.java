@@ -89,7 +89,9 @@ public class Peers implements Serializable {
                 }
                 for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
                     System.out.println("4");
-                    fileReplicationArray[i] += 1;
+                    if(i<=fileReplicationArray.length - 1) {
+                        fileReplicationArray[i] += 1;
+                    }
                 }
                 System.out.printf("replication array: %s\n", fileReplicationArray);
                 replicationMap.put(fileName, fileReplicationArray);
