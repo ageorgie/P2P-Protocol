@@ -27,13 +27,13 @@ public class Peers implements Serializable {
     }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
-        System.out.printf("receivedpeerfilemap: %s\n", receivedPeerFileMap);
+//        System.out.printf("receivedpeerfilemap: %s\n", receivedPeerFileMap);
         // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
 
             String receivedRemoteHost = entry.getKey();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
-            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
+//            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
@@ -118,9 +118,9 @@ public class Peers implements Serializable {
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
-//            System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
+            System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
-//            System.out.printf("replicationFactorArray: %s\", Arrays.toString(replicationFactorArray));
+            System.out.printf("replicationFactorArray: %s\n", Arrays.toString(replicationFactorArray));
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
@@ -131,9 +131,9 @@ public class Peers implements Serializable {
 //                        System.out.println("yay, got into if statement");
                         Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum]);
                     }
-//                    System.out.println("wtf");
+                    System.out.println("wtf");
                 }
-//                System.out.println("fuck this");
+                System.out.println("fuck this");
            }
         }
 //        System.out.printf("fillPriorityQueues finished\n");
