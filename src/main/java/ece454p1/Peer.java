@@ -95,9 +95,9 @@ public class Peer {
         if(!file.isFile() || !file.canRead()) {
             return -1;
         }
-        int numChunks = (int) Math.ceil(file.length() / Config.CHUNK_SIZE);
+        int numChunks = (int) Math.ceil(((float) file.length()) / ((float) Config.CHUNK_SIZE));
         System.out.printf("file length: %d\n", file.length());
-        System.out.printf("numchunks: %d\n", file.length());
+        System.out.printf("numchunks: %d\n", );
         String[] splitPath = filePath.split("/");
         String fileName = splitPath[splitPath.length - 1];
         peers.insertNewFile(fileName, numChunks);
