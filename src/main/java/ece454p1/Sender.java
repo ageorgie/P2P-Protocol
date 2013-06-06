@@ -97,6 +97,7 @@ public class Sender implements Callable<Integer> {
                 os.close();
                 socket.close();
                 System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
+                break;
             } catch(ConnectException e) {
                 System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
                 numRetries++;
