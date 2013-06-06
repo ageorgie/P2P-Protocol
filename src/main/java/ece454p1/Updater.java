@@ -43,7 +43,7 @@ public class Updater implements Callable<Integer> {
             Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
             System.out.printf("Received %s", bitSetMap);
             Peer.getPeers().updatePeerFileMap(bitSetMap);
-            System.out.printf("My own peerfilemap after update: %s", Peer.getFileMap());
+            System.out.printf("My own peerfilemap after update: %s", Peer.getPeers().getPeerFileMap());
         } else {
             throw new Exception("Received object type is not recognized");
         }
