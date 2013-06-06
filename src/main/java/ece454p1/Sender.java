@@ -110,7 +110,7 @@ public class Sender implements Callable<Integer> {
             System.out.printf("address: %s, %s\n", split[0], split[1]);
             Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
             System.out.printf("peerfilemap: %s\n", peerFileMap);
-            Sender.send(split[0], Integer.getInteger(split[1]), peerFileMap);
+            Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
         }
         System.out.println("Exiting sendPeerFileMap");
     }
