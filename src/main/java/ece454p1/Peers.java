@@ -103,7 +103,7 @@ public class Peers implements Serializable {
     }
 
     public void fillPriorityQueues() {
-//        System.out.println("fillPriorityQueues called");
+        System.out.println("fillPriorityQueues called");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
