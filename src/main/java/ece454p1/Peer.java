@@ -40,7 +40,7 @@ public class Peer {
         String line;
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
-            bitSetMap.put(line, new HashMap<String, BitSet>());
+            bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
         br.close();
         System.out.printf("initializepeers bitsetmap: %s\n", bitSetMap);
