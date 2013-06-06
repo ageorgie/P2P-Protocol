@@ -122,7 +122,7 @@ public class Peers implements Serializable {
             for(int i = 0;i<numChunks; i++) {
                 bitSet.flip(i);
             }
-            for(int j=0; j<bitSet.length(); j++) {
+            for(int j=0; j<numChunks; j++) {
                 if(bitSet.get(j)) {
                     System.out.print("1");
                 } else {
@@ -132,11 +132,12 @@ public class Peers implements Serializable {
             System.out.print("\n");
             for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
-                    entry.getValue().put(fileName, new BitSet(numChunks));
+                    peerFileMap.get(entry.getKey()).put(fileName, new BitSet(numChunks));
                 } else {
-                    entry.getValue().put(fileName, bitSet);
+                    peerFileMap.get(entry.getKey()).put(fileName, bitSet);
                 }
             }
+
 
         }
     }

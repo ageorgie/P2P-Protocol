@@ -92,7 +92,9 @@ public class Peer {
 	public static int insert(String filePath) {
 
         File file = new File(filePath);
+        System.out.println(file);
         if(!file.isFile() || !file.canRead()) {
+            System.out.println("Can't read DOG!");
             return -1;
         }
         int numChunks = (int) Math.ceil(file.length() * 1.00 / Config.CHUNK_SIZE * 1.00);
@@ -182,6 +184,7 @@ public class Peer {
                 Peer.leave();
                 break;
             case insert:
+                System.out.println("It's amazing");
                 Peer.insert(split[1]);
                 break;
             case query:
