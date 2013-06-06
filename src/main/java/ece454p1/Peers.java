@@ -27,7 +27,7 @@ public class Peers implements Serializable {
     }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
-        System.out.printf("receivedpeerfilemap: %s", receivedPeerFileMap);
+        System.out.printf("receivedpeerfilemap: %s\n", receivedPeerFileMap);
         // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
 
@@ -55,16 +55,16 @@ public class Peers implements Serializable {
                 peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
 
-            // Fill ReplicatioMap and Priority Queues
-            fillReplicationMap();
-            Sender.emptyPriorityQueues();
-            fillPriorityQueues();
         }
+        // Fill ReplicatioMap and Priority Queues
+        fillReplicationMap();
+        Sender.emptyPriorityQueues();
+        fillPriorityQueues();
     }
 
 
     public void fillReplicationMap() {
-        System.out.println("fillReplicationMapCalled");
+//        System.out.println("fillReplicationMapCalled");
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
             for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
 
@@ -80,7 +80,7 @@ public class Peers implements Serializable {
                 } else if(!bitsetStr.isEmpty()) {
                     length = 1;
                 }
-                System.out.printf("bitset size: %d\n", length);
+//                System.out.printf("bitset size: %d\n", length);
 
                 //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
                 // We check if replicationMap is already existing for the file.
@@ -98,12 +98,12 @@ public class Peers implements Serializable {
                 replicationMap.put(fileName, fileReplicationArray);
             }
         }
-        System.out.printf("fillReplicationMap finished\n");
+//        System.out.printf("fillReplicationMap finished\n");
 
     }
 
     public void fillPriorityQueues() {
-        System.out.println("fillPriorityQueues called");
+//        System.out.println("fillPriorityQueues called");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
@@ -118,7 +118,7 @@ public class Peers implements Serializable {
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
-            System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
+//            System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
 //            System.out.printf("replicationFactorArray: %s\", Arrays.toString(replicationFactorArray));
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
@@ -136,7 +136,7 @@ public class Peers implements Serializable {
 //                System.out.println("fuck this");
            }
         }
-        System.out.printf("fillPriorityQueues finished\n");
+//        System.out.printf("fillPriorityQueues finished\n");
     }
 
 
