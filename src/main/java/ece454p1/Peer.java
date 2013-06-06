@@ -43,6 +43,7 @@ public class Peer {
             bitSetMap.put(line, new HashMap<String, BitSet>());
         }
         br.close();
+        System.out.printf("initializepeers bitsetmap: %s\n", bitSetMap);
         peers = new Peers(bitSetMap);
     }
 
