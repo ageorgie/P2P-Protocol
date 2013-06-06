@@ -183,6 +183,7 @@ public class Peer {
                 Peer.leave();
                 break;
             case insert:
+                System.out.println("It's amazing")
                 Peer.insert(split[1]);
                 break;
             case query:
