@@ -123,7 +123,7 @@ public class Sender implements Callable<Integer> {
                    System.out.printf("Poll: %s\n", poll);
                    String[] pollSplit = poll.split("_");
 
-                   if(pollSplit[1]=="!!PeerFileMap!!") {
+                   if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
                    } else {
                        String fileName = pollSplit[1];
