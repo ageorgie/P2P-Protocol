@@ -108,7 +108,6 @@ public class Peers implements Serializable {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
             int[] replicationFactorArray = entry.getValue();
-            System.out.printf("filename: %s, replicationFactorArray: %s\n", fileName, Arrays.toString(replicationFactorArray));
             Map<String, BitSet> peerToBitSetMap = new HashMap<String, BitSet>();
 
 
@@ -124,16 +123,12 @@ public class Peers implements Serializable {
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
-//                    System.out.print("see, i  told you");
                     boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
                     System.out.printf("#%d, %s -> %s , ", chunkNum, peerAddress, replicationFactor);
                     if(!replicationFactor) {
-//                        System.out.println("yay, got into if statement");
                         Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum]);
                     }
-                    System.out.println("wtf");
                 }
-                System.out.println("fuck this");
            }
         }
         System.out.printf("fillPriorityQueues finished\n");
