@@ -109,6 +109,7 @@ public class Peers implements Serializable {
 
             // PeerToBitsetMap for the current filename contains a mapping of all peer addresses to the bitsets corresponding
             // to this filename
+            System.out.println(peerFileMap);
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
