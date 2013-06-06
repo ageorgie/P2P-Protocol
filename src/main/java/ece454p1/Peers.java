@@ -80,7 +80,7 @@ public class Peers implements Serializable {
                 } else if(!bitsetStr.isEmpty()) {
                     length = 1;
                 }
-                System.out.printf("filename: %s, bitset:%s, bitset length: %d, bitset size: %s\n", fileName, bitSet, length, bitSet.size());
+                System.out.printf("filename: %s, bitset:%s, bitset length: %d\n", fileName, bitSet, bitSet.length() - 1);
 
                 //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
                 // We check if replicationMap is already existing for the file.
@@ -163,7 +163,7 @@ public class Peers implements Serializable {
         Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         if(!localBitSetMap.containsKey(fileName)) {
             BitSet bitSet = new BitSet(numChunks);
-            for(int i = 0;i<numChunks; i++) {
+            for(int i = 0;i<=numChunks; i++) {
                 bitSet.set(i);
             }
             for(int j=0; j<numChunks; j++) {
@@ -176,7 +176,9 @@ public class Peers implements Serializable {
             System.out.print("\n");
             for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
-                    peerFileMap.get(entry.getKey()).put(fileName, new BitSet(numChunks));
+                    BitSet emptyBitSet = new BitSet(numChunks);
+                    emptyBitSet.set(numChunks);
+                    peerFileMap.get(entry.getKey()).put(fileName, emptyBitSet);
                 } else {
                     peerFileMap.get(entry.getKey()).put(fileName, bitSet);
                 }
