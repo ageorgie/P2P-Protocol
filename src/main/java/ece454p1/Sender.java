@@ -105,6 +105,7 @@ public class Sender implements Callable<Integer> {
     public static void sendPeerFileMap() throws IOException {
         System.out.println("SendPeerFileMap called");
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
+        System.out.printf("other addresses: %s\n", addresses);
         for(String address: addresses) {
             String[] split = address.split(" ");
             send(split[0], Integer.getInteger(split[1]), (Serializable) Peer.getPeers().getPeerFileMap());
