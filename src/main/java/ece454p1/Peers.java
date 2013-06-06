@@ -64,7 +64,7 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
-//        System.out.println("fillReplicationMapCalled");
+        System.out.println("fillReplicationMapCalled");
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
             for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
 
@@ -98,7 +98,7 @@ public class Peers implements Serializable {
                 replicationMap.put(fileName, fileReplicationArray);
             }
         }
-//        System.out.printf("fillReplicationMap finished\n");
+        System.out.printf("fillReplicationMap finished\n");
 
     }
 
@@ -136,7 +136,7 @@ public class Peers implements Serializable {
                 System.out.println("fuck this");
            }
         }
-//        System.out.printf("fillPriorityQueues finished\n");
+        System.out.printf("fillPriorityQueues finished\n");
     }
 
 
