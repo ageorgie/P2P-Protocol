@@ -127,6 +127,7 @@ public class Peers implements Serializable {
                 bitSet.flip(i);
             }
             localBitSetMap.put(fileName, bitSet);
+            peerFileMap.put(Peer.getHostAndPort(), localBitSetMap);
         }
     }
 
