@@ -108,6 +108,7 @@ public class Sender implements Callable<Integer> {
         System.out.printf("other addresses: %s\n", addresses);
         for(String address: addresses) {
             String[] split = address.split(" ");
+            System.out.printf("address: %s, %s\n", split[0], split[1]);
             send(split[0], Integer.getInteger(split[1]), (Serializable) Peer.getPeers().getPeerFileMap());
         }
     }
