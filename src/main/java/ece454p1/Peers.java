@@ -122,12 +122,12 @@ public class Peers implements Serializable {
             for(int i = 0;i< bitSet.length() ; i++) {
                 bitSet.flip(i);
             }
-            System.out.printf("New Bitset:");
+            System.out.printf("New Bitset [%d]:", bitSet.length());
             for(int j=0; j<bitSet.length(); j++) {
                 if(bitSet.get(j)) {
-                    System.out.print(1);
+                    System.out.print("1");
                 } else {
-                    System.out.print(0);
+                    System.out.print("0");
                 }
             }
             System.out.print("\n");
