@@ -45,7 +45,9 @@ public class Peers implements Serializable {
 //                    System.out.printf("peerfilemap: %s\n", peerFileMap);
 //                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", receivedRemoteHost, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
-                        peerFileMap.get(receivedRemoteHost).get(receivedFileName).or(receivedBitSet);
+                        BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
+                        bitSet.or(receivedBitSet);
+                        peerFileMap.get(receivedRemoteHost).put(receivedFileName, bitSet);
                     } else {
 //                        System.out.printf("got into else: %s, %s\n", receivedFileName, receivedBitSet);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
@@ -109,7 +111,7 @@ public class Peers implements Serializable {
 
             // PeerToBitsetMap for the current filename contains a mapping of all peer addresses to the bitsets corresponding
             // to this filename
-            System.out.println(peerFileMap);
+//            System.out.println(peerFileMap);
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
             }
