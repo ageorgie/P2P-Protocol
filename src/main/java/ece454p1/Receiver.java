@@ -31,22 +31,15 @@ public class Receiver implements Callable<Integer> {
     public Integer call() throws Exception {
         try {
             while(true) {
-                System.out.println("top of while loop");
                 Socket client = serverSocket.accept();
                 System.out.println("Receiver: New connection accepted.");
-//                if()
-//                Map<String, Map<String, BitSet>> emptyMap = new HashMap<String, Map<String, BitSet>>();
-//                emptyMap.put(client.)
-//                Peer.getPeers().updatePeerFileMap();
                 Object obj = new Object();
                 InputStream is = client.getInputStream();
-                System.out.printf("inputstream.available: %d\n", is.available());
+//                System.out.printf("inputstream.available: %d\n", is.available());
                 ObjectInputStream ois = new ObjectInputStream(is);
-                System.out.println("after ois");
 
                 try {
                     obj = ois.readObject();
-                    System.out.println(obj.getClass());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
