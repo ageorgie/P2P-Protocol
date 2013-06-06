@@ -46,7 +46,7 @@ public class Receiver implements Callable<Integer> {
 
                 try {
                     obj = ois.readObject();
-                		System.out.println(obj.getClass());
+                    System.out.println(obj.getClass());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

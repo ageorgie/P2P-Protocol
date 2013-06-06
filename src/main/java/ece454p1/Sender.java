@@ -85,34 +85,33 @@ public class Sender implements Callable<Integer> {
 
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
-        try {
-            System.out.printf("Send called for host:%s, port %d\n", host, port);
-            socket = new Socket(host, port);
-            System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
-        } catch(ConnectException e) {
-            System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
-            throw e;
+        int numRetries = 0;
+        while(numRetries<3) {
+            try {
+                System.out.printf("Send called for host:%s, port %d\n", host, port);
+                socket = new Socket(host, port);
+                OutputStream os = socket.getOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(object);
+                oos.close();
+                os.close();
+                socket.close();
+                System.out.printf("Sender: Connection accepted for %s: %d - Ready for transfer\n", host, port);
+            } catch(ConnectException e) {
+                System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
+                numRetries++;
+            }
         }
-        OutputStream os = socket.getOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(os);
-        oos.writeObject(object);
-        oos.close();
-        os.close();
-        socket.close();
     }
 
     public static void sendPeerFileMap() throws IOException {
         System.out.println("SendPeerFileMap called");
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
-        System.out.printf("other addresses: %s\n", addresses);
         for(String address: addresses) {
             String[] split = address.split(" ");
-            System.out.printf("address: %s, %s\n", split[0], split[1]);
             Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
-            System.out.printf("peerfilemap: %s\n", peerFileMap);
             Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
         }
-        System.out.println("Exiting sendPeerFileMap");
     }
 
     public Integer call() throws Exception {
@@ -120,7 +119,6 @@ public class Sender implements Callable<Integer> {
        while(true) {
            for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
-               System.out.printf("In sender for loop: peeraddress: %s\n", peerAddress);
                PriorityQueue<String> priorityQueue = entry.getValue();
                if(!priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
@@ -138,7 +136,6 @@ public class Sender implements Callable<Integer> {
                        }
                        String[] split = destination.split(" ");
                        Chunk chunk = new Chunk(fileName, chunkNum);
-                       System.out.printf("sending chunk %s\n", pollSplit);
                        send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }
