@@ -78,13 +78,17 @@ public class Peers implements Serializable {
                 // We check if replicationMap is already existing for the file.
                 // If not, just create a new array of zeros with the length of the bitset
                 // go through all the bits set to true in the bitset and increment the index of the fileReplicationArray
+                System.out.println("1");
                 int[] fileReplicationArray;
                 if(replicationMap.containsKey(fileName)) {
+                    System.out.println("2");
                     fileReplicationArray = replicationMap.get(fileName);
                 } else {
+                    System.out.println("3");
                     fileReplicationArray = new int[bitSet.length() - 1];
                 }
                 for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
+                    System.out.println("4");
                     fileReplicationArray[i] += 1;
                 }
                 System.out.printf("replication array: %s\n", fileReplicationArray);
