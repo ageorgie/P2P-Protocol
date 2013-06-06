@@ -21,7 +21,7 @@ public class Peer {
     static Peers peers;
     static String host;
     static int port;
-    static ExecutorService executorService = Executors.newFixedThreadPool(2);
+    static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 
     private Peer(String host, int port) throws IOException {
