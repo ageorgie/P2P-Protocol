@@ -119,7 +119,10 @@ public class Sender implements Callable<Integer> {
                System.out.printf("In sender for loop: peeraddress: %s\n", peerAddress);
                PriorityQueue<String> priorityQueue = entry.getValue();
                if(!priorityQueue.isEmpty()) {
-                   String[] pollSplit = priorityQueue.poll().split("_");
+                   String poll = priorityQueue.poll();
+                   System.out.printf("Poll: %s\n", poll);
+                   String[] pollSplit = poll.split("_");
+
                    if(pollSplit[1]=="!!PeerFileMap!!") {
                        sendPeerFileMap();
                    } else {
