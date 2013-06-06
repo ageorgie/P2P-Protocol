@@ -27,27 +27,20 @@ public class Peers implements Serializable {
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
-            String remoteHost = entry.getKey();
-            Map<String, BitSet> bitSetMap = entry.getValue();
-            if(peerFileMap.containsKey(remoteHost)) {
-
-                for(Map.Entry<String, BitSet> bitSetEntry: bitSetMap.entrySet()) {
-                    String fileName = bitSetEntry.getKey();
-                    BitSet receivedBitSet = bitSetEntry.getValue();
-                    if(bitSetMap.containsKey(fileName)) {
-                        peerFileMap.get(remoteHost).get(fileName).or(receivedBitSet);
+            String receivedRemoteHost = entry.getKey();
+            Map<String, BitSet> receivedBitSetMap = entry.getValue();
+            if(peerFileMap.containsKey(receivedRemoteHost)) {
+                for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
+                    String receivedFileName = receivedBitSetEntry.getKey();
+                    BitSet receivedBitSet = receivedBitSetEntry.getValue();
+                    if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
+                        peerFileMap.get(receivedRemoteHost).get(receivedFileName).or(receivedBitSet);
+                    } else {
+                        peerFileMap.get(receivedRemoteHost).put(receivedFileName,receivedBitSet);
                     }
-//                    peerFileMap.get(entry.getKey()).put(fileName, receivedBitSet);
-
-//                    for (int i = receivedBitSet.nextSetBit(0); i >= 0; i = receivedBitSet.nextSetBit(i+1)) {
-//                        bitSet.set(i, true);
-////                        String chunkId = String.format("%s,%s", fileName, i);
-////                        insertIntoReplicationMap(chunkId);
-//                    }
-
                 }
             } else {
-                peerFileMap.put(remoteHost, bitSetMap);
+                peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
             fillReplicationMap();
             Sender.emptyPriorityQueues();
