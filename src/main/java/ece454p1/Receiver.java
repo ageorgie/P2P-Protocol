@@ -13,6 +13,8 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +25,7 @@ import java.util.concurrent.Callable;
  */
 public class Receiver implements Callable<Integer> {
     ServerSocket serverSocket;
+    static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     public Receiver(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -33,27 +36,7 @@ public class Receiver implements Callable<Integer> {
             while(true) {
                 Socket client = serverSocket.accept();
                 System.out.println("Receiver: New connection accepted.");
-                Object obj = new Object();
-                InputStream is = client.getInputStream();
-//                System.out.printf("inputstream.available: %d\n", is.available());
-                ObjectInputStream ois = new ObjectInputStream(is);
-
-                try {
-                    obj = ois.readObject();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                if(obj.getClass().isAssignableFrom(Chunk.class)) {
-                    Chunk chunk = (Chunk) obj;
-                    Peer.ReceiveChunk(chunk);
-                } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
-                    Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
-                    Peer.getPeers().updatePeerFileMap(bitSetMap);
-                    System.out.println(bitSetMap);
-                } else {
-                    throw new Exception("Received object type is not recognized");
-                }
+                 executorService.submit(new Updater(client));
             }
         } finally {
             serverSocket.close();
