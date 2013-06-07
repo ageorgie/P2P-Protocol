@@ -73,7 +73,7 @@ public class Sender implements Callable<Integer> {
                 oos.close();
                 os.close();
                 socket.close();
-//            System.out.printf("Sender: Object successfully transferred\n", host, port);
+            System.out.printf("Sender: Object successfully transferred\n", host, port);
             } catch(ConnectException e) {
                 System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
                 Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
@@ -83,7 +83,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void sendPeerFileMap() throws IOException {
-//        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
+        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
         for(String address: addresses) {
             String[] split = address.split(" ");
