@@ -59,7 +59,7 @@ public class Peers implements Serializable {
         // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
 
-            String receivedRemoteHost = entry.getKey();
+            String receivedRemoteHost = entry.getKey().toLowerCase();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
 //            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
