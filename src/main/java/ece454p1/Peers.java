@@ -134,6 +134,7 @@ public class Peers implements Serializable {
 
     public void fillPriorityQueues() {
 //        System.out.println("Peers: in fillPriorityQueues");
+
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
@@ -149,14 +150,26 @@ public class Peers implements Serializable {
                 }
             }
 
+            int i = 0;
+            List<String> peerAddresses = new ArrayList<String>(peerToBitSetMap.keySet());
+            peerAddresses.size();
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
-                    String peerAddress = peerToBitSetEntry.getKey();
-                    if(Peer.getPeers().isConnected(peerAddress)) {
-                        boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
-                        if(!replicationFactor) {
+                    int j = 0;
+                    while(j<peerAddresses.size()) {
+                        String peerAddress = peerAddresses.get(i % peerAddresses.size());
+                        if(Peer.getPeers().isConnected(peerAddress) && !peerToBitSetEntry.getValue().get(chunkNum)) {
                             Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
+                            break;
                         }
+                        j++;
+                    }
+//                    String peerAddress = peerToBitSetEntry.getKey();
+//                    if(Peer.getPeers().isConnected(peerAddress)) {
+//                        boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
+//                        if(!replicationFactor) {
+//                            Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
+//                        }
                     }
                 }
            }
@@ -182,7 +195,7 @@ public class Peers implements Serializable {
 //            }
 //            System.out.print("\n");
 //        }
-    }
+//    }
 
 
     public void insertNewFile(String fileName, int numChunks) {
