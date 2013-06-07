@@ -35,12 +35,12 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, int chunkNum, Integer priority) {
-        System.out.printf("insertChunkIntoPriorityQueue\n");
+//        System.out.printf("insertChunkIntoPriorityQueue\n");
         if(!priorityQueueMap.containsKey(destinationAddress)) {
             priorityQueueMap.put(destinationAddress, new PriorityQueue<String>(100, new StringComparator()));
         }
         String chunkIdentifier = String.format("%s_%s_%s_%s", priority, fileName, chunkNum, destinationAddress);
-        System.out.printf("inserting chunk %s\n", chunkIdentifier);
+//        System.out.printf("inserting chunk %s\n", chunkIdentifier);
         priorityQueueMap.get(destinationAddress).offer(chunkIdentifier);
     }
 
@@ -103,6 +103,7 @@ public class Sender implements Callable<Integer> {
                        }
                        String[] split = destination.split(" ");
                        Chunk chunk = new Chunk(fileName, chunkNum);
+                       System.out.printf("Sending file: %s, chunk %d", fileName, chunkNum);
                        send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }

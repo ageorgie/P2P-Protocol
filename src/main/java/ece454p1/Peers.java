@@ -116,7 +116,9 @@ public class Peers implements Serializable {
             // to this filename
 //            System.out.println(peerFileMap);
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
-                peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
+                if(!peerFileEntry.getKey().equals(Peer.getHostAndPort())) {
+                    peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
+                }
             }
             System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
