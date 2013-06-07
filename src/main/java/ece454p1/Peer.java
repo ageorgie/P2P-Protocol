@@ -1,6 +1,7 @@
 package ece454p1;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -24,28 +25,36 @@ public class Peer {
     static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 
-    private Peer(String host, int port) throws IOException {
-        fileMap = new HashMap<String, File>();
-//        initializePeers(Config.basePath + "peerFileName.txt");
-        File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
-        if (!theDir.exists()) theDir.mkdir();
-        initializePeers(getClass().getClassLoader().getResourceAsStream("addresses.txt"));
-        this.host = host;
-        this.port = port;
-    }
-
-
-
-    public static void initializePeers(InputStream in) throws IOException {
+    private Peer() throws IOException {
+        InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
+        host = InetAddress.getLocalHost().getHostName();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
+            String[] split = line.split(" ");
+            if(host.equals(split[0])) {
+                port = Integer.parseInt(split[1]);
+            }
             bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
         br.close();
         peers = new Peers(bitSetMap);
+        fileMap = new HashMap<String, File>();
+        File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
+        if (!theDir.exists()) theDir.mkdir();
     }
+
+
+//
+//    public static void initializePeers(InputStream in) throws IOException {
+//        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//        String line;
+//        Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
+//        while ((line = br.readLine()) != null) {
+//            bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
+//        }
+//    }
 
     public static String getHostAndPort() {
         return host + " " + port;
@@ -147,7 +156,7 @@ public class Peer {
 //        new Peer(args[0], Integer.parseInt(args[1]));
 //        System.out.println(Peer.peers.getPeerFileMap());
 //        Peer.join();
-
+        new Peer();
         while(true) {
             System.out.print(">>");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -171,15 +180,15 @@ public class Peer {
         String[] split = command.split(" ");
         Command commandEnum = Command.valueOf(split[0]);
         switch (commandEnum) {
-            case sethost:
-                if(split.length <3) {
-                    System.out.println("Please enter correct host and port.");
-                } else {
-                    String host = split[1];
-                    int port = Integer.parseInt(split[2]);
-                    new Peer(host, port);
-                }
-                break;
+//            case sethost:
+//                if(split.length <3) {
+//                    System.out.println("Please enter correct host and port.");
+//                } else {
+//                    String host = split[1];
+//                    int port = Integer.parseInt(split[2]);
+//                    new Peer(host, port);
+//                }
+//                break;
             case join:
                 Peer.join();
                 break;
@@ -202,7 +211,7 @@ public class Peer {
 
 
      public enum Command {
-         sethost,
+//         sethost,
          join,
          leave,
          insert,

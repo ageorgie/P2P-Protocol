@@ -17,8 +17,18 @@ public class Peers implements Serializable {
     Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
     Map<String, int[]> replicationMap = new HashMap<String, int[]>();
 
+    Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
+
+
+    public void setConnectionState(String peerAddress, boolean connected) {
+        connectionStateMap.put(peerAddress, connected);
+    }
+
     public Peers(Map<String, Map<String, BitSet>> peerFileMap) {
         this.peerFileMap = peerFileMap;
+        for(String address: this.getOtherPeerAddresses()) {
+            setConnectionState(address, true);
+        }
     }
 
     public void updatePeerFileMap(Chunk chunk) {
