@@ -50,7 +50,7 @@ public class Updater implements Callable<Integer> {
         }
         String senderHostName = socket.getInetAddress().getHostName();
         int senderPort = Peer.getPeers().getPort(senderHostName);
-        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName, senderPort), false);
+        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName, senderPort), true);
         return 1;
     }
 }
