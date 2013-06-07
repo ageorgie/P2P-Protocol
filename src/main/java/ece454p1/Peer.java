@@ -66,7 +66,7 @@ public class Peer {
         File file;
         if(!fileMap.containsKey(fileName)) {
             String[] split = Peer.getHostAndPort().split(" ");
-            file = new File(String.format("%s/ECE454_Downloads/%s-%d/%s", System.getProperty("user.home"), split[0], split[1], fileName));
+            file = new File(String.format("%s/ECE454_Downloads/%s-%s/%s", System.getProperty("user.home"), split[0], split[1], fileName));
             System.out.printf("Past new file");
             fileMap.put(fileName, file);
         } else {
