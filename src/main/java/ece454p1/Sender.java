@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,32 +18,45 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Sender implements Callable<Integer> {
 
     static Map<String, PriorityQueue<String>> priorityQueueMap;
+    static Boolean broadcast;
+    static Boolean sentBitmap;
 
+    public static Boolean getSentBitmap() {
+        return sentBitmap;
+    }
 
     public Sender() throws IOException, InterruptedException {
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
+        broadcast = false;
+        sentBitmap = true;
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
             priorityQueueMap.put(address, new PriorityQueue<String>());
         }
-        insertPeerFileMapIntoPriorityQueue();
+        sendPeerFileMap();
     }
 
-
-    public static void insertPeerFileMapIntoPriorityQueue() {
-        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
-            String peerAddress = entry.getKey();
-            if(Peer.getPeers().isConnected(peerAddress)) {
-                PriorityQueue priorityQueue = entry.getValue();
-                System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
-                priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
-                Iterator i = priorityQueue.iterator();
-                while(i.hasNext()) {
-                    System.out.printf("%s,", i.next());
-                }
-                System.out.printf("\n");
-            }
-        }
+    public static void setSentBitmap(Boolean sentBitmap) {
+        Sender.sentBitmap = sentBitmap;
     }
+
+    public static void setBroadcast(Boolean broadcast) {
+        Sender.broadcast = broadcast;
+    }
+//    public static void insertPeerFileMapIntoPriorityQueue() {
+//        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
+//            String peerAddress = entry.getKey();
+//            if(Peer.getPeers().isConnected(peerAddress)) {
+//                PriorityQueue priorityQueue = entry.getValue();
+//                System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
+//                priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
+//                Iterator i = priorityQueue.iterator();
+//                while(i.hasNext()) {
+//                    System.out.printf("%s,", i.next());
+//                }
+//                System.out.printf("\n");
+//            }
+//        }
+//    }
 
     public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, Integer chunkNum, Integer priority, Integer maxChunk) {
 //        System.out.printf("insertChunkIntoPriorityQueue\n");
@@ -103,25 +117,28 @@ public class Sender implements Callable<Integer> {
         for(String address: addresses) {
             String[] split = address.split(" ");
             Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
-            Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
+            send(split[0], Integer.parseInt(split[1]), peerFileMap);
         }
     }
 
     public Integer call() throws Exception {
        while(true) {
-           for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
-               String peerAddress = entry.getKey();
-               PriorityQueue<String> priorityQueue = entry.getValue();
-               boolean isConnected = Peer.getPeers().isConnected(peerAddress);
-               boolean pqEmpty = priorityQueue.isEmpty();
-               if(isConnected && !pqEmpty ) {
-                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
-                   String poll = priorityQueue.poll();
-                   System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
-                   String[] pollSplit = poll.split("_");
-                   if(pollSplit[1].equals("!!PeerFileMap!!")) {
-                       sendPeerFileMap();
-                   } else {
+           if(broadcast){
+               sendPeerFileMap();
+               setSentBitmap(true);
+               while(broadcast){}
+               setSentBitmap(false);
+           } else {
+               for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+                   String peerAddress = entry.getKey();
+                   PriorityQueue<String> priorityQueue = entry.getValue();
+                   boolean isConnected = Peer.getPeers().isConnected(peerAddress);
+                   boolean pqEmpty = priorityQueue.isEmpty();
+                   if(isConnected && !pqEmpty ) {
+                       System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
+                       String poll = priorityQueue.poll();
+                       System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
+                       String[] pollSplit = poll.split("_");
                        String fileName = pollSplit[1];
                        int chunkNum = Integer.parseInt(pollSplit[2]);
                        String destination = pollSplit[3];
