@@ -34,7 +34,6 @@ public class Updater implements Callable<Integer> {
         int senderPort = Peer.getPeers().getPort(senderHostName);
 //        System.out.printf("senderport: %d\n", senderPort);
         Peer.getPeers().setConnectionState(String.format("%s %d", senderHostName, senderPort), true);
-        System.out.printf("Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
         ObjectInputStream ois = new ObjectInputStream(is);
 
         try {
