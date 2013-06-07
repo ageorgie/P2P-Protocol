@@ -3,6 +3,7 @@ package ece454p1;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +18,9 @@ public class StateBroadcaster implements Callable<Integer> {
         while(true) {
 //            System.out.println("Statebroadcaster: top of loop");
             System.out.printf("Statebroadcaster: Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
-            Sender.insertPeerFileMapIntoPriorityQueue();
+            Sender.setBroadcast(true);
+            while(!Sender.getSentBitmap()){}
+            Sender.setBroadcast(false);
             Thread.sleep(5000);
         }
     }
