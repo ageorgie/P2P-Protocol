@@ -73,12 +73,15 @@ public class Peer {
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
 
         try {
-            FileOutputStream out = new FileOutputStream(file);
+//            FileOutputStream out = new FileOutputStream(file);
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
             try {
 //                FileChannel ch = out.getChannel();
 ////                ch.position(byteOffset);
 ////                ch.write(ByteBuffer.wrap(chunk.getByteArray()));
-                out.write(chunk.getByteArray(), byteOffset, chunk.getByteArray().length);
+                raf.seek(byteOffset);
+                raf.write(chunk.getByteArray());
+//                out.write(chunk.getByteArray(), byteOffset, chunk.getByteArray().length);
                 peers.updatePeerFileMap(chunk);
                 System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunk.chunkNum, chunk.byteArray.length);
                 String chunkStr = new String(chunk.byteArray);
