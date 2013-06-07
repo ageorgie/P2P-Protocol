@@ -75,8 +75,8 @@ public class Sender implements Callable<Integer> {
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
         String peerAddress = String.format("%s %s", host, port);
-        System.out.printf("Send called for peeraddress: %s\n", peerAddress);
         if(Peer.getPeers().isConnected(peerAddress)) {
+            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
             try {
                 System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket(host, port);
