@@ -61,11 +61,13 @@ public class Peer {
     }
 
     public static void ReceiveChunk(Chunk chunk) throws IOException {
+        System.out.printf("In ReceiveChunk for %s: %d\n", chunk.getFileName(), chunk.getChunkNum());
         String fileName = chunk.getFileName();
         File file;
         if(!fileMap.containsKey(fileName)) {
             String[] split = Peer.getHostAndPort().split(" ");
             file = new File(String.format("%s/ECE454_Downloads/%s-%d/%s", System.getProperty("user.home"), split[0], split[1], fileName));
+            System.out.printf("Past new file");
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
