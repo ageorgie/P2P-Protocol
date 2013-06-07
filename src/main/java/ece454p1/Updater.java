@@ -30,6 +30,7 @@ public class Updater implements Callable<Integer> {
         System.out.printf("Accepted incoming connection from %s\n", socket.getInetAddress().getHostName());
         String senderHostName = socket.getInetAddress().getHostName().toLowerCase();
         System.out.printf("senderhostname: %s\n", senderHostName);
+        System.out.printf("host to port map: %s\n", Peer.getPeers().hostToPortMap);
         int senderPort = Peer.getPeers().getPort(senderHostName);
         System.out.printf("senderport: %d\n", senderPort);
         Peer.getPeers().setConnectionState(String.format("%s %d", senderHostName, senderPort), true);
