@@ -47,25 +47,25 @@ public class Updater implements Callable<Integer> {
         System.out.println("4");
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
         System.out.println("5");
+//        try {
+        RandomAccessFile raf = new RandomAccessFile(file, "w");
+        System.out.println("6");
         try {
-            RandomAccessFile raf = new RandomAccessFile(file, "w");
-            System.out.println("6");
-            try {
-                raf.seek(byteOffset);
-                System.out.println("7");
-                raf.write(chunk.getByteArray());
-                System.out.println("Before updatePeerFileMap");
-                Peer.getPeers().updatePeerFileMap(chunk);
-            } catch (Exception e){
-                System.out.println("Error while writing to file");
-            } finally {
-                raf.close();
-            }
-
-        } catch (IOException ex) {
-            System.out.println("Caught ioexception");
-            throw ex;
+            raf.seek(byteOffset);
+            System.out.println("7");
+            raf.write(chunk.getByteArray());
+            System.out.println("Before updatePeerFileMap");
+            Peer.getPeers().updatePeerFileMap(chunk);
+        } catch (Exception e){
+            System.out.println("Error while writing to file");
+        } finally {
+            raf.close();
         }
+//
+//        } catch (IOException ex) {
+//            System.out.println("Caught ioexception");
+//            throw ex;
+//        }
     }
 
 
@@ -99,6 +99,7 @@ public class Updater implements Callable<Integer> {
         } else {
 //            throw new Exception("Updater: Received object type is not recognized");
         }
+        System.out.println("way down here");
 
         return 1;
     }
