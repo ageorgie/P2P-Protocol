@@ -31,12 +31,17 @@ public class Chunk implements Serializable {
         this.chunkNum = chunkNum;
         List<Byte> byteList = new ArrayList<Byte>();
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
-        dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
+
+        if(chunkNum!=0) {
+            dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
+        }
+
         try {
             for(int i=0; i<Config.CHUNK_SIZE; i++) {
                 byteList.add(dataInputStream.readByte());
             }
         } catch(EOFException e) {
+
         } finally {
             byteArray = new byte[byteList.size()];
             for(int i = 0; i<byteList.size(); i++) {
