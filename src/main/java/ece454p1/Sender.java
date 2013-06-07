@@ -68,15 +68,18 @@ public class Sender implements Callable<Integer> {
         System.out.printf("Send called for peeraddress: %s\n", peerAddress);
         if(Peer.getPeers().isConnected(peerAddress)) {
             try {
-            System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
-            socket = new Socket(host, port);
-            OutputStream os = socket.getOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeObject(object);
-            oos.close();
-            os.close();
-            socket.close();
-            System.out.printf("Sender: Object successfully transferred to %s:%d\n", host, port);
+                System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
+                socket = new Socket(host, port);
+                System.out.printf("Sender: Socket Opened\n");
+                OutputStream os = socket.getOutputStream();
+
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(object);
+                System.out.printf("Sender: wrote object\n");
+                oos.close();
+                os.close();
+                socket.close();
+                System.out.printf("Sender: Object successfully transferred to %s:%d\n", host, port);
             } catch(ConnectException e) {
                 System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
                 Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
