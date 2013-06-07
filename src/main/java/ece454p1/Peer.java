@@ -79,6 +79,9 @@ public class Peer {
                 ch.position(byteOffset);
                 ch.write(ByteBuffer.wrap(chunk.getByteArray()));
                 peers.updatePeerFileMap(chunk);
+                System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunk.chunkNum, chunk.byteArray.length);
+                String chunkStr = new String(chunk.byteArray);
+                System.err.println(chunkStr);
             } finally {
                 out.close();
             }
