@@ -28,9 +28,9 @@ public class Updater implements Callable<Integer> {
         Object obj = new Object();
         InputStream is = socket.getInputStream();
         System.out.printf("Accepted incoming connection from %s\n", socket.getInetAddress().getHostName());
-        String senderHostName = socket.getInetAddress().getHostName();
+        String senderHostName = socket.getInetAddress().getHostName().toLowerCase();
         int senderPort = Peer.getPeers().getPort(senderHostName);
-        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName.toLowerCase(), senderPort), true);
+        Peer.getPeers().setConnectionState(String.format("%s %d", senderHostName, senderPort), true);
         System.out.printf("Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
         ObjectInputStream ois = new ObjectInputStream(is);
 
