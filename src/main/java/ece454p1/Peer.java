@@ -25,6 +25,10 @@ public class Peer {
     static ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 
+    public static String getHost() {
+        return host;
+    }
+
     private Peer() throws IOException {
         InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
         host = InetAddress.getLocalHost().getHostName();

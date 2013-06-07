@@ -199,7 +199,7 @@ public class Peers implements Serializable {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         while ((line = br.readLine()) != null) {
-            if(!Peer.getHostAndPort().equals(line.toLowerCase())) {
+            if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
                 output.add(line.toLowerCase());
             }
             peerFileMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
