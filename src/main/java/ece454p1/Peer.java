@@ -102,8 +102,6 @@ public class Peer {
                 raf.seek(byteOffset);
                 raf.write(chunk.getByteArray());
                 peers.updatePeerFileMap(chunk);
-                String chunkStr = new String(chunk.byteArray);
-//                System.err.println(chunkStr);
             } catch (Exception e){
                 System.out.println("Error while writing to file");
             }
