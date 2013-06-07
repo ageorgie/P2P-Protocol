@@ -43,6 +43,7 @@ public class Updater implements Callable<Integer> {
             try {
                 raf.seek(byteOffset);
                 raf.write(chunk.getByteArray());
+                System.out.println("Before updatePeerFileMap");
                 Peer.getPeers().updatePeerFileMap(chunk);
             } catch (Exception e){
                 System.out.println("Error while writing to file");
