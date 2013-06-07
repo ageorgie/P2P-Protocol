@@ -159,26 +159,26 @@ public class Peers implements Serializable {
                     System.out.printf("Peers: file: %s, chunk #%d -> N/A(skip)\n", fileName, chunkNum);
                     continue;
                 }
-                for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
-                    int j = 0;
-                    while(j<peerAddresses.size()) {
-                        String peerAddress = peerAddresses.get(i % peerAddresses.size());
-                        i++;
+//                for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
+                int j = 0;
+                while(j<peerAddresses.size()) {
+                    String peerAddress = peerAddresses.get(i % peerAddresses.size());
+                    i++;
 
-                        if(Peer.getPeers().isConnected(peerAddress) && !peerToBitSetEntry.getValue().get(chunkNum)) {
-                            System.out.printf("Peers: file: %s, chunk #%d -> insert into queue to %s\n", fileName, chunkNum, peerAddress);
-                            Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
-                            break;
-                        }
-                        j++;
+                    if(Peer.getPeers().isConnected(peerAddress) && !peerToBitSetMap.get(peerAddress).get(chunkNum)) {
+                        System.out.printf("Peers: file: %s, chunk #%d -> insert into queue to %s\n", fileName, chunkNum, peerAddress);
+                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
+                        break;
                     }
+                    j++;
+                }
 //                    String peerAddress = peerToBitSetEntry.getKey();
 //                    if(Peer.getPeers().isConnected(peerAddress)) {
 //                        boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
 //                        if(!replicationFactor) {
 //                            Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
 //                        }
-                }
+//                }
             }
        }
 
