@@ -18,7 +18,7 @@ public class StateBroadcaster implements Callable<Integer> {
 //            System.out.println("Statebroadcaster: top of loop");
             System.out.printf("Statebroadcaster: Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
             Sender.insertPeerFileMapIntoPriorityQueue();
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         }
     }
 }
