@@ -162,6 +162,7 @@ public class Peers implements Serializable {
                             Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
                             break;
                         }
+                        i++;
                         j++;
                     }
 //                    String peerAddress = peerToBitSetEntry.getKey();
