@@ -36,7 +36,8 @@ public class Peer {
         String line;
         Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
         peers = new Peers();
-        while ((line = br.readLine().toLowerCase()) != null) {
+        while ((line = br.readLine()) != null) {
+            line = line.toLowerCase();
             String[] split = line.split(" ");
             peers.hostToPortMap.put(split[0].toLowerCase(), Integer.parseInt(split[1]));
             peers.setConnectionState(line.toLowerCase(), true);
