@@ -64,7 +64,7 @@ public class Peer {
         String fileName = chunk.getFileName();
         File file;
         if(!fileMap.containsKey(fileName)) {
-            file = new File(fileName);
+            file = new File(String.format("%s/ECE454_Downloads/%s", System.getProperty("user.home"), fileName));
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
@@ -99,7 +99,7 @@ public class Peer {
             System.out.println("Can't read DOG!");
             return -1;
         }
-        int numChunks = (int) Math.ceil(file.length() * 1.00 / Config.CHUNK_SIZE * 1.00);
+        int numChunks = (int) Math.ceil((file.length() * 1.00) / (Config.CHUNK_SIZE * 1.00));
         System.out.printf("file length: %d\n", file.length());
         System.out.printf("numchunks: %d\n", numChunks );
         String[] splitPath = filePath.split("/");
