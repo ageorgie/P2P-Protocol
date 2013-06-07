@@ -39,6 +39,8 @@ public class Peer {
             bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
         br.close();
+
+        System.out.printf("Peer created. Host: %s Port: %d", host, port);
         peers = new Peers(bitSetMap);
         fileMap = new HashMap<String, File>();
         File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
