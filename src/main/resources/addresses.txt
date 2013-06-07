@@ -1,2 +1,6 @@
 eceLinux2 10063
 ecelinux3 10064
+ecelinux4 10063
+ecelinux5 10064
+ecelinux6 10063
+ecelinux7 10064
