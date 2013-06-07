@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Peer and Status are the classes we really care about Peers is a container;
@@ -23,13 +24,14 @@ public class Peer {
     static String host;
     static int port;
     static ExecutorService executorService = Executors.newFixedThreadPool(15);
+    static Future senderFuture;
 
 
     public static String getHost() {
         return host;
     }
 
-    private Peer() throws IOException {
+    private Peer() throws IOException, InterruptedException {
         InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
         host = InetAddress.getLocalHost().getHostName().toLowerCase();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -68,7 +70,7 @@ public class Peer {
             boolean mkdirOut = theDir.mkdir();
             System.out.printf("mkdir returned %s\n", mkdirOut);
         }
-        theDir.setReadable(true,true);
+        theDir.setReadable(true, true);
         theDir.setWritable(true,true);
     }
 
@@ -115,7 +117,7 @@ public class Peer {
 	public static int join() throws IOException, InterruptedException {
 
         executorService.submit(new Receiver(port));
-        executorService.submit(new Sender());
+        senderFuture = executorService.submit(new Sender());
         executorService.submit(new StateBroadcaster());
 
         return 1;
@@ -170,6 +172,9 @@ public class Peer {
             case query:
                 Peer.query(null);
                 break;
+            case refresh_sender:
+                senderFuture.cancel(true);
+                senderFuture = executorService.submit(new Sender());
             default:
                 break;
         }
@@ -181,6 +186,7 @@ public class Peer {
          join,
          leave,
          insert,
-         query
+         query,
+         refresh_sender
      }
 }

@@ -19,8 +19,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class Sender implements Callable<Integer> {
 
-        static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
-
+    static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
 
     public Sender() throws IOException, InterruptedException {
         priorityQueueMap = new HashMap<String, PriorityBlockingQueue<String>>();
@@ -36,13 +35,7 @@ public class Sender implements Callable<Integer> {
             String peerAddress = entry.getKey();
             if(Peer.getPeers().isConnected(peerAddress)) {
                 PriorityBlockingQueue priorityQueue = entry.getValue();
-//                System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
                 priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
-                Iterator i = priorityQueue.iterator();
-//                while(i.hasNext()) {
-//                    System.out.printf("%s,", i.next());
-//                }
-//                System.out.printf("\n");
             }
         }
     }
