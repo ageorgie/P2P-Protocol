@@ -75,6 +75,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void sendPeerFileMap() throws IOException {
+        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
         for(String address: addresses) {
             String[] split = address.split(" ");

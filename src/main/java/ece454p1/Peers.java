@@ -47,13 +47,13 @@ public class Peers implements Serializable {
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
                         bitSet.or(receivedBitSet);
-                        System.out.printf("or'd bitset: %s", bitSet);
+                        System.out.printf("or'd bitset: %s\n", bitSet);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, bitSet);
-                        System.out.printf("peerfileMap after put: %s", peerFileMap);
+                        System.out.printf("peerfileMap after put: %s\n", peerFileMap);
                     } else {
-                        System.out.printf("filename doesn't exist in peerfilemap for host: %s", receivedRemoteHost);
+                        System.out.printf("filename doesn't exist in peerfilemap for host: %s\n", receivedRemoteHost);
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
-                        System.out.printf("peerfileMap after put: %s", peerFileMap);
+                        System.out.printf("peerfileMap after put: %s\n", peerFileMap);
                     }
                 }
             } else {
@@ -114,7 +114,6 @@ public class Peers implements Serializable {
 
             // PeerToBitsetMap for the current filename contains a mapping of all peer addresses to the bitsets corresponding
             // to this filename
-//            System.out.println(peerFileMap);
             for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 if(!peerFileEntry.getKey().equals(Peer.getHostAndPort())) {
                     peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
@@ -123,7 +122,9 @@ public class Peers implements Serializable {
             System.out.printf("filename: %s, peerToBitSetMap: %s\n", fileName, peerToBitSetMap);
 
             System.out.printf("replicationFactorArray: %s\n", Arrays.toString(replicationFactorArray));
+            System.out.print("iterating through chunks:");
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
+                System.out.printf("%d,", chunkNum);
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
                     boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
