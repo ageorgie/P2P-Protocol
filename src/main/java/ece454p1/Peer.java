@@ -80,10 +80,6 @@ public class Peer {
         return host.toLowerCase() + " " + port;
     }
 
-    public static String getBasePath() {
-        return String.format("%s/%s", Config.basePath, port);
-    }
-
     public static Peers getPeers() {
         return peers;
     }
