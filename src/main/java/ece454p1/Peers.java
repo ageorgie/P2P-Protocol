@@ -133,6 +133,7 @@ public class Peers implements Serializable {
                     }
                 }
            }
+           System.out.printf("\n");
         }
         for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
             String address = entry1.getKey();
