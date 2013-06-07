@@ -18,29 +18,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Sender implements Callable<Integer> {
 
     static Map<String, PriorityQueue<String>> priorityQueueMap;
-    static Boolean broadcast;
-    static Boolean sentBitmap;
-
-    public static Boolean getSentBitmap() {
-        return sentBitmap;
-    }
+    static AtomicBoolean broadcast;
 
     public Sender() throws IOException, InterruptedException {
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
-        broadcast = false;
-        sentBitmap = true;
+        broadcast.set(false);
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
             priorityQueueMap.put(address, new PriorityQueue<String>());
         }
         sendPeerFileMap();
     }
 
-    public static void setSentBitmap(Boolean sentBitmap) {
-        Sender.sentBitmap = sentBitmap;
-    }
-
     public static void setBroadcast(Boolean broadcast) {
-        Sender.broadcast = broadcast;
+        Sender.broadcast.getAndSet(broadcast);
     }
 //    public static void insertPeerFileMapIntoPriorityQueue() {
 //        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
@@ -123,11 +113,9 @@ public class Sender implements Callable<Integer> {
 
     public Integer call() throws Exception {
        while(true) {
-           if(broadcast){
+           if(broadcast.get()){
                sendPeerFileMap();
-               setSentBitmap(true);
-               while(broadcast){}
-               setSentBitmap(false);
+               setBroadcast(false);
            } else {
                for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                    String peerAddress = entry.getKey();
