@@ -76,11 +76,11 @@ public class Peers implements Serializable {
 //                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", receivedRemoteHost, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
-                        System.out.printf("This is your bitset before the or: %s", bitSet.toString());
+                        System.out.printf("This is your bitset before the or: %s \n", bitSet.toString());
                         bitSet.or(receivedBitSet);
-                        System.out.printf("This is your bitset after the or: %s", bitSet.toString());
+                        System.out.printf("This is your bitset after the or: %s \n", bitSet.toString());
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, bitSet);
-                        System.out.printf("This is your bitset when it is in peerFileMap: %s", peerFileMap.get(receivedRemoteHost).get(receivedFileName));
+                        System.out.printf("This is your bitset when it is in peerFileMap: %s \n", peerFileMap.get(receivedRemoteHost).get(receivedFileName));
                     } else {
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
                     }
