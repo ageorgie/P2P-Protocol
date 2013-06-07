@@ -27,7 +27,8 @@ public class Peer {
     private Peer(String host, int port) throws IOException {
         fileMap = new HashMap<String, File>();
 //        initializePeers(Config.basePath + "peerFileName.txt");
-
+        File theDir = new File(String.format("%s/ECE454_Downloads/", System.getProperty("user.home")));
+        if (!theDir.exists()) theDir.mkdir();
         initializePeers(getClass().getClassLoader().getResourceAsStream("addresses.txt"));
         this.host = host;
         this.port = port;
