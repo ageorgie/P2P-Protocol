@@ -19,7 +19,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class Sender implements Callable<Integer> {
 
-    static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
+        static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
 
 
     public Sender() throws IOException, InterruptedException {
@@ -80,7 +80,7 @@ public class Sender implements Callable<Integer> {
         if(Peer.getPeers().isConnected(peerAddress)) {
 //            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
             try {
-                System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
+//                System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket();
                 try {
                     socket.connect(new InetSocketAddress(host, port), 1000);
@@ -93,7 +93,7 @@ public class Sender implements Callable<Integer> {
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
-                System.out.printf("Sender: wrote object\n");
+//                System.out.printf("Sender: wrote object\n");
                 oos.close();
                 os.close();
                 socket.close();
@@ -112,7 +112,7 @@ public class Sender implements Callable<Integer> {
 
     public Integer call() throws Exception {
        while(true) {
-           Thread.sleep(100);
+           Thread.sleep(400);
            for(Map.Entry<String, PriorityBlockingQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
                PriorityBlockingQueue<String> priorityQueue = entry.getValue();
@@ -122,7 +122,7 @@ public class Sender implements Callable<Integer> {
                    System.out.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s \n" ,peerAddress, isConnected, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
-                       System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
+//                       System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
                        List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
                        for(String address: addresses) {
                            String[] split = address.split(" ");
@@ -130,7 +130,7 @@ public class Sender implements Callable<Integer> {
                            Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
                        }
                    } else {
-                       System.out.printf("Sending my current chunk:\n");
+//                       System.out.printf("Sending my current chunk:\n");
                        String fileName = pollSplit[1];
                        int chunkNum = Integer.parseInt(pollSplit[2]);
                        String destination = pollSplit[3];
