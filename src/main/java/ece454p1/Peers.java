@@ -208,6 +208,8 @@ public class Peers implements Serializable {
         String line;
         while ((line = br.readLine()) != null) {
             line = line.toLowerCase();
+            System.out.printf("lower case peer host: %s\n", Peer.getHost().toLowerCase());
+            System.out.printf("lower case line host: %s\n", line.split(" ")[0].toLowerCase());
             if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
                 output.add(line);
             }
