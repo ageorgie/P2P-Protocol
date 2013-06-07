@@ -1,7 +1,5 @@
 package ece454p1;
 
-import com.sun.deploy.util.ArrayUtil;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
