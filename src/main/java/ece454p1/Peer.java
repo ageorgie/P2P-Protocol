@@ -70,7 +70,7 @@ public class Peer {
             file = fileMap.get(fileName);
         }
 
-        int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
+        long byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
 
         try {
             FileOutputStream out = new FileOutputStream(file);
