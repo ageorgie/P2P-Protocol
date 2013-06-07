@@ -43,7 +43,7 @@ public class Chunk implements Serializable {
         } catch(EOFException e) {
 
         } finally {
-            System.err.printf("File %s, Chunk %s\n", fileName, chunkNum);
+            System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunkNum, byteList.size());
             byteArray = new byte[byteList.size()];
             for(int i = 0; i<byteList.size(); i++) {
                 byteArray[i] = byteList.get(i).byteValue();
