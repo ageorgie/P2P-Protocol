@@ -50,20 +50,13 @@ public class Updater implements Callable<Integer> {
         RandomAccessFile raf = new RandomAccessFile(file, "rwd");
         try {
             raf.seek(byteOffset);
-//            System.out.println("7");
             raf.write(chunk.getByteArray());
-//            System.out.println("Before updatePeerFileMap");
             Peer.getPeers().updatePeerFileMap(chunk);
         } catch (Exception e){
             System.out.println("Error while writing to file");
         } finally {
             raf.close();
         }
-//
-//        } catch (IOException ex) {
-//            System.out.println("Caught ioexception");
-//            throw ex;
-//        }
     }
 
 
