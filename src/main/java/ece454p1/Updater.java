@@ -27,6 +27,7 @@ public class Updater implements Callable<Integer> {
     public Integer call() throws Exception {
         Object obj = new Object();
         InputStream is = socket.getInputStream();
+        System.out.printf("Accepted incoming connection from %s", socket.getInetAddress().getHostName());
         ObjectInputStream ois = new ObjectInputStream(is);
 
         try {
