@@ -97,7 +97,7 @@ public class Sender implements Callable<Integer> {
            for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
                PriorityQueue<String> priorityQueue = entry.getValue();
-               boolean isConnected = Peer.getPeers().isConnected(peerAddress;
+               boolean isConnected = Peer.getPeers().isConnected(peerAddress);
                boolean pqEmpty = !priorityQueue.isEmpty();
                System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
 
