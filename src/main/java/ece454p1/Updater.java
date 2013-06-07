@@ -8,6 +8,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,8 +47,8 @@ public class Updater implements Callable<Integer> {
             Chunk chunk = (Chunk) obj;
             System.out.printf("Updater: Received file: %s, chunk: %s\n", chunk.getFileName(), chunk.getChunkNum());
             Peer.ReceiveChunk(chunk);
-        } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
-            Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
+        } else if (obj.getClass().isAssignableFrom(ConcurrentHashMap.class)) {
+            ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> bitSetMap = (ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>>) obj;
 //            System.out.printf("Updater: Received bitsetmap: %s\n", bitSetMap);
             Peer.getPeers().updatePeerFileMap(bitSetMap);
             System.out.printf("Updater: My own peerfilemap after update: %s\n", Peer.getPeers().getPeerFileMap());
