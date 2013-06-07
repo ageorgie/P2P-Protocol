@@ -38,7 +38,7 @@ public class Peer {
         peers = new Peers();
         while ((line = br.readLine()) != null) {
             String[] split = line.split(" ");
-            peers.hostToPortMap.put(split[0], Integer.parseInt(split[1]));
+            peers.hostToPortMap.put(split[0].toLowerCase(), Integer.parseInt(split[1]));
             peers.setConnectionState(line.toLowerCase(), true);
             if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);

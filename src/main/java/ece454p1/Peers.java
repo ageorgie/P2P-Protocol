@@ -46,7 +46,7 @@ public class Peers implements Serializable {
 
 
     public int getPort(String host) {
-        return hostToPortMap.get(host);
+        return hostToPortMap.get(host.toLowerCase());
     }
 
     public void updatePeerFileMap(Chunk chunk) {
