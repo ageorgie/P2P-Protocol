@@ -53,8 +53,13 @@ public class Peer {
         peers.setPeerFileMap(peerFileMap);
         System.out.printf("Peer created. Host: %s Port: %d", host, port);
         fileMap = new HashMap<String, File>();
-        File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
-        if (!theDir.exists()) theDir.mkdir();
+        String path = String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port);
+        System.out.println(path);
+        File theDir = new File(path);
+        if (!theDir.exists()) {
+            boolean mkdirOut = theDir.mkdir();
+            System.out.printf("mkdir returned %s\n", mkdirOut);
+        }
     }
 
 
