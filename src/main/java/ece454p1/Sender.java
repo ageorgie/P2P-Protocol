@@ -2,7 +2,9 @@ package ece454p1;
 
 import java.io.*;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -79,10 +81,15 @@ public class Sender implements Callable<Integer> {
 //            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
             try {
                 System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
-                socket = new Socket(host, port);
-                System.out.printf("Sender: Socket Opened\n");
+                socket = new Socket();
+                try {
+                    socket.connect(new InetSocketAddress(host, port), 1000);
+                    System.out.printf("Sender: Socket Opened\n");
+                } catch (SocketTimeoutException e) {
+                    System.out.printf("Sender: Socket connection timed out\n");
+                    return;
+                }
                 OutputStream os = socket.getOutputStream();
-
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
                 System.out.printf("Sender: wrote object\n");
