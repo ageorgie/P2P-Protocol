@@ -28,7 +28,7 @@ public class Peer {
         host = InetAddress.getLocalHost().getHostName().toLowerCase();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
-        Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
+        ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> peerFileMap = new ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>>();
         peers = new Peers();
         while ((line = br.readLine()) != null) {
             line = line.toLowerCase();
@@ -40,7 +40,7 @@ public class Peer {
             if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);
             }
-            peerFileMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
+            peerFileMap.put(line.toLowerCase(), new ConcurrentHashMap<String, BitSet>());
         }
         br.close();
         peers.setPeerFileMap(peerFileMap);
