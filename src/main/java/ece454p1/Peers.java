@@ -204,11 +204,11 @@ public class Peers implements Serializable {
         InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
-        while ((line = br.readLine()) != null) {
+        while ((line = br.readLine().toLowerCase()) != null) {
             if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
-                output.add(line.toLowerCase());
+                output.add(line);
             }
-            peerFileMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
+            peerFileMap.put(line, new HashMap<String, BitSet>());
         }
         br.close();
 //        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {

@@ -31,12 +31,12 @@ public class Peer {
 
     private Peer() throws IOException {
         InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
-        host = InetAddress.getLocalHost().getHostName();
+        host = InetAddress.getLocalHost().getHostName().toLowerCase();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
         peers = new Peers();
-        while ((line = br.readLine()) != null) {
+        while ((line = br.readLine().toLowerCase()) != null) {
             String[] split = line.split(" ");
             peers.hostToPortMap.put(split[0].toLowerCase(), Integer.parseInt(split[1]));
             peers.setConnectionState(line.toLowerCase(), true);
