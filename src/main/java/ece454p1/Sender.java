@@ -80,12 +80,12 @@ public class Sender implements Callable<Integer> {
             try {
                 System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket(host, port);
-//                System.out.printf("Sender: Socket Opened\n");
+                System.out.printf("Sender: Socket Opened\n");
                 OutputStream os = socket.getOutputStream();
 
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
-//                System.out.printf("Sender: wrote object\n");
+                System.out.printf("Sender: wrote object\n");
                 oos.close();
                 os.close();
                 socket.close();
