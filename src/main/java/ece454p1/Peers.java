@@ -61,7 +61,7 @@ public class Peers implements Serializable {
 
             String receivedRemoteHost = entry.getKey();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
-            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
+//            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
@@ -125,6 +125,8 @@ public class Peers implements Serializable {
     }
 
     public void fillPriorityQueues() {
+
+        System.out.printf("Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap())
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
@@ -230,6 +232,10 @@ public class Peers implements Serializable {
 
     public Map<String, Map<String, BitSet>> getPeerFileMap() {
         return peerFileMap;
+    }
+
+    public Map<String, Boolean> getConnectionStateMap() {
+        return connectionStateMap;
     }
 
 
