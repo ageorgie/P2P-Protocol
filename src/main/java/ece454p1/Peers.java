@@ -158,11 +158,12 @@ public class Peers implements Serializable {
                     int j = 0;
                     while(j<peerAddresses.size()) {
                         String peerAddress = peerAddresses.get(i % peerAddresses.size());
+                        i++;
                         if(Peer.getPeers().isConnected(peerAddress) && !peerToBitSetEntry.getValue().get(chunkNum)) {
                             Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
                             break;
                         }
-                        i++;
+
                         j++;
                     }
 //                    String peerAddress = peerToBitSetEntry.getKey();
@@ -171,9 +172,9 @@ public class Peers implements Serializable {
 //                        if(!replicationFactor) {
 //                            Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
 //                        }
-                    }
                 }
-           }
+            }
+       }
 
         }
 //
