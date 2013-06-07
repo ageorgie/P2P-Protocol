@@ -114,11 +114,9 @@ public class Sender implements Callable<Integer> {
                String peerAddress = entry.getKey();
                PriorityBlockingQueue<String> priorityQueue = entry.getValue();
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
-               boolean pqEmpty = priorityQueue.isEmpty();
-               if(isConnected && !pqEmpty ) {
-                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
-                   String poll = priorityQueue.poll();
-                   System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
+               String poll = priorityQueue.poll();
+               if(isConnected && poll!=null) {
+                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s: %s \n" ,peerAddress, isConnected, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
