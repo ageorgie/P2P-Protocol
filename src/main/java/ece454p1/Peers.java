@@ -16,9 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Peers implements Serializable {
 
     ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> peerFileMap = new ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>>();
-    Map<String, int[]> replicationMap = new HashMap<String, int[]>();
-    Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
-    Map<String, Integer> hostToPortMap = new HashMap<String, Integer>();
+    ConcurrentHashMap<String, int[]> replicationMap = new ConcurrentHashMap<String, int[]>();
+    ConcurrentHashMap<String, Boolean> connectionStateMap = new ConcurrentHashMap<String, Boolean>();
+    ConcurrentHashMap<String, Integer> hostToPortMap = new ConcurrentHashMap<String, Integer>();
 
     public void setConnectionState(String peerAddress, boolean connected) {
         connectionStateMap.put(peerAddress, connected);
@@ -98,9 +98,9 @@ public class Peers implements Serializable {
     public void fillReplicationMap() {
         System.out.println("Peer: in fillReplicationMap");
 //        Sender.insertPeerFileMapIntoPriorityQueue();
-        replicationMap = new HashMap<String, int[]>();
-        for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
-            for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
+        replicationMap = new ConcurrentHashMap<String, int[]>();
+        for(ConcurrentHashMap<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
+            for(ConcurrentHashMap.Entry entry:fileNameToBitSetMap.entrySet()) {
 
                 // For each file and its corresponding bitset
                 String fileName = (String) entry.getKey();
