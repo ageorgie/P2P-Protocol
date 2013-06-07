@@ -81,7 +81,6 @@ public class Peer {
     }
 
     public static void ReceiveChunk(Chunk chunk) throws IOException {
-//        System.out.printf("In ReceiveChunk for %s: %d\n", chunk.getFileName(), chunk.getChunkNum());
         String fileName = chunk.getFileName();
         File file;
 
