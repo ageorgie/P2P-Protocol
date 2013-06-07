@@ -4,6 +4,7 @@ import javax.sound.midi.SysexMessage;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Peers is a dumb container to hold the peers; the number of peers is fixed,
@@ -15,7 +16,7 @@ import java.util.*;
 public class Peers implements Serializable {
 
     Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
-    Map<String, int[]> replicationMap = new HashMap<String, int[]>();
+    Map<String, int[]> replicationMap = new ConcurrentHashMap<String, int[]>();
     Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
     Map<String, Integer> hostToPortMap = new HashMap<String, Integer>();
 
@@ -45,6 +46,22 @@ public class Peers implements Serializable {
     }
 
 
+    public boolean allowedToLeave() {
+        Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
+        for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
+            String fileName = entry.getKey();
+            BitSet bitSet = entry.getValue();
+            int[] replicationArray = replicationMap.get(fileName);
+            for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
+                if(replicationArray[i] <= 1) {
+                    System.out.println("Peers: Not allowed to leave yet.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public int getPort(String host) {
         return hostToPortMap.get(host.toLowerCase());
     }
@@ -52,23 +69,16 @@ public class Peers implements Serializable {
     public void updatePeerFileMap(Chunk chunk) {
         System.out.printf("Peers: updatePeerFileMap: chunk %s, %d\n", chunk.fileName, chunk.chunkNum);
         BitSet bitSet = peerFileMap.get(Peer.getHostAndPort()).get(chunk.fileName);
-//        System.out.printf("This is my peerFileMap: %s", peerFileMap.toString());
-//        System.out.printf("My chunk file name %s \n", chunk.getFileName());
-//        System.out.printf("My current bitset before the update %s \n", bitSet);
         bitSet.set(chunk.chunkNum);
-//        System.out.printf("My current bitset after the update %s \n", bitSet);
         peerFileMap.get(Peer.getHostAndPort()).put(chunk.getFileName(), bitSet);
-//        System.out.printf("My peerFileMap bitset setting it %s \n", peerFileMap.get(Peer.getHostAndPort()).get(chunk.getFileName()));
     }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
-//        System.out.printf("receivedpeerfilemap: %s\n", receivedPeerFileMap);
         // Go through all entries in the received peer file map
         for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
 
             String receivedRemoteHost = entry.getKey().toLowerCase();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
-//            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
@@ -95,7 +105,6 @@ public class Peers implements Serializable {
             }
 
         }
-//        System.out.printf("before fillreplicationmap. %s", peerFileMap);
         // Fill ReplicatioMap and Priority Queues
         fillReplicationMap();
         Sender.emptyPriorityQueues();
@@ -104,7 +113,6 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
-//        System.out.println("Peer: in fillReplicationMap");
         Sender.insertPeerFileMapIntoPriorityQueue();
         replicationMap = new HashMap<String, int[]>();
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
@@ -113,8 +121,6 @@ public class Peers implements Serializable {
                 // For each file and its corresponding bitset
                 String fileName = (String) entry.getKey();
                 BitSet bitSet = (BitSet) entry.getValue();
-
-//                System.out.printf("filename: %s, bitset:%s, bitset length: %d\n", fileName, bitSet, bitSet.length() - 1);
 
                 //Here, we wish to increment the value of a particular chunk in its fileReplicationArray
                 // We check if replicationMap is already existing for the file.
@@ -142,7 +148,6 @@ public class Peers implements Serializable {
     }
 
     public void fillPriorityQueues() {
-//        System.out.println("Peers: in fillPriorityQueues");
 
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
@@ -282,18 +287,6 @@ public class Peers implements Serializable {
     public Map<String, Boolean> getConnectionStateMap() {
         return connectionStateMap;
     }
-
-
-    //	public abstract int initialize(String peersFile);
-
-//	public abstract Peer getPeer(int i);
-
-
-//    public void broadcastMap() {}
-
-//	private int numPeers;
-
-//    HashMap<String, BitSet>[] peerBitSetArray = new HashMap[Config.MAX_PEERS];
 
 
 }
