@@ -50,7 +50,7 @@ public class Updater implements Callable<Integer> {
 
         System.out.println(file.toString());
 //        try {
-        RandomAccessFile raf = new RandomAccessFile(file, "w");
+        RandomAccessFile raf = new RandomAccessFile(file, "rw");
         System.out.println("6");
         try {
             raf.seek(byteOffset);
