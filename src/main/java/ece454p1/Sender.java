@@ -5,7 +5,9 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -17,19 +19,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Sender implements Callable<Integer> {
 
-    static Map<String, PriorityQueue<String>> priorityQueueMap;
+    static ConcurrentHashMap<String, PriorityBlockingQueue<String>> priorityQueueMap;
     static AtomicBoolean broadcast;
 
     public Sender() throws IOException, InterruptedException {
-        priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
+        priorityQueueMap = new ConcurrentHashMap<String, PriorityBlockingQueue<String>>();
         broadcast = new AtomicBoolean(false);
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
-            priorityQueueMap.put(address, new PriorityQueue<String>());
+            priorityQueueMap.putIfAbsent(address, new PriorityBlockingQueue<String>());
         }
         sendPeerFileMap();
     }
 
-    public static void setBroadcast(Boolean broadcast) {
+    public static synchronized void setBroadcast(Boolean broadcast) {
         Sender.broadcast.getAndSet(broadcast);
     }
 //    public static void insertPeerFileMapIntoPriorityQueue() {
@@ -51,7 +53,7 @@ public class Sender implements Callable<Integer> {
     public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, Integer chunkNum, Integer priority, Integer maxChunk) {
 //        System.out.printf("insertChunkIntoPriorityQueue\n");
         if(!priorityQueueMap.containsKey(destinationAddress)) {
-            priorityQueueMap.put(destinationAddress, new PriorityQueue<String>(100, new StringComparator()));
+            priorityQueueMap.put(destinationAddress, new PriorityBlockingQueue<String>(100, new StringComparator()));
         }
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0; i < maxChunk.toString().length() - chunkNum.toString().length(); i++) {
@@ -64,7 +66,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void emptyPriorityQueues() {
-        for(PriorityQueue priorityQueue:priorityQueueMap.values()) {
+        for(PriorityBlockingQueue priorityQueue:priorityQueueMap.values()) {
             priorityQueue.clear();
         }
     }
@@ -117,15 +119,18 @@ public class Sender implements Callable<Integer> {
                sendPeerFileMap();
                setBroadcast(false);
            } else {
-               for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+               for(Map.Entry<String, PriorityBlockingQueue<String>> entry: priorityQueueMap.entrySet()) {
                    String peerAddress = entry.getKey();
-                   PriorityQueue<String> priorityQueue = entry.getValue();
+                   PriorityBlockingQueue<String> priorityQueue = entry.getValue();
                    boolean isConnected = Peer.getPeers().isConnected(peerAddress);
                    boolean pqEmpty = priorityQueue.isEmpty();
                    if(isConnected && !pqEmpty ) {
                        System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
                        String poll = priorityQueue.poll();
                        System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
+                       if(poll == null){
+                           continue;
+                       }
                        String[] pollSplit = poll.split("_");
                        String fileName = pollSplit[1];
                        int chunkNum = Integer.parseInt(pollSplit[2]);

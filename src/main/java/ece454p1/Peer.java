@@ -2,14 +2,8 @@ package ece454p1;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,7 +12,7 @@ import java.util.concurrent.Executors;
  * feel free to do a different container
  */
 public class Peer {
-    static Map<String, File> fileMap;
+    static ConcurrentHashMap<String, File> fileMap;
     static Peers peers;
     static String host;
     static int port;
@@ -51,7 +45,7 @@ public class Peer {
         br.close();
         peers.setPeerFileMap(peerFileMap);
         System.out.printf("Peer created. Host: %s Port: %d", host, port);
-        fileMap = new HashMap<String, File>();
+        fileMap = new ConcurrentHashMap<String, File>();
         File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
         if (!theDir.exists()) theDir.mkdir();
     }
@@ -94,19 +88,52 @@ public class Peer {
         } else {
             file = fileMap.get(fileName);
         }
-        int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
-        try {
-            RandomAccessFile raf = new RandomAccessFile(file, "rw");
-            try {
-                raf.seek(byteOffset);
-                raf.write(chunk.getByteArray());
-                peers.updatePeerFileMap(chunk);
-            } catch (Exception e){
-                System.out.println("Error while writing to file");
+
+        byte[] byteArray = new byte[0];
+        synchronizedFileOperation(file, chunk.getChunkNum(), false, byteArray);
+        peers.updatePeerFileMap(chunk);
+    }
+
+    public static synchronized byte[] synchronizedFileOperation(File file, int chunkNum, Boolean isReading, byte[] byteArray) throws IOException {
+        if(isReading){
+            List<Byte> byteList = new ArrayList<Byte>();
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
+
+            if(chunkNum!=0) {
+                dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
             }
-        } catch (IOException ex) {
-           throw ex;
+
+            try {
+                for(int i=0; i<Config.CHUNK_SIZE; i++) {
+                    byteList.add(dataInputStream.readByte());
+                }
+            } catch(EOFException e) {
+            } finally {
+//              System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunkNum, byteList.size());
+                byteArray = new byte[byteList.size()];
+                for(int i = 0; i<byteList.size(); i++) {
+                    byteArray[i] = byteList.get(i).byteValue();
+    //                System.err.print(byteArray[i]);
+                }
+                return byteArray;
+            }
+        } else {
+            try {
+                int byteOffset = chunkNum*Config.CHUNK_SIZE;
+                RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                try {
+                    raf.seek(byteOffset);
+                    raf.write(byteArray);
+
+                } catch (Exception e){
+                    System.out.println("Error while writing to file");
+                }
+            } catch (IOException ex) {
+                throw ex;
+            }
+            return new byte[0];
         }
+
     }
 
 
@@ -124,7 +151,7 @@ public class Peer {
         String[] splitPath = filePath.split("/");
         String fileName = splitPath[splitPath.length - 1];
         peers.insertNewFile(fileName, numChunks);
-        fileMap.put(fileName, file);
+        fileMap.putIfAbsent(fileName, file);
         return 0;
     };
 
@@ -178,7 +205,7 @@ public class Peer {
         }
     }
 
-    public static Map<String, File> getFileMap() {
+    public static ConcurrentHashMap<String, File> getFileMap() {
         return fileMap;
     }
 
