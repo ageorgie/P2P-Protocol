@@ -168,7 +168,9 @@ public class Peers implements Serializable {
 
 
     public void insertNewFile(String fileName, int numChunks) {
+        System.out.printf("gethostandport : %s\n", Peer.getHostAndPort());
         Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
+        System.out.printf("localbitsetmap : %s\n", localBitSetMap);
         if(!localBitSetMap.containsKey(fileName)) {
             BitSet bitSet = new BitSet(numChunks);
             for(int i = 0;i<=numChunks; i++) {
