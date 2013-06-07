@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,23 +17,23 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Sender implements Callable<Integer> {
 
-    static Map<String, PriorityQueue<String>> priorityQueueMap;
+    static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
 
 
     public Sender() throws IOException, InterruptedException {
-        priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
+        priorityQueueMap = new HashMap<String, PriorityBlockingQueue<String>>();
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
-            priorityQueueMap.put(address, new PriorityQueue<String>());
+            priorityQueueMap.put(address, new PriorityBlockingQueue<String>());
         }
         insertPeerFileMapIntoPriorityQueue();
     }
 
 
     public static void insertPeerFileMapIntoPriorityQueue() {
-        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
+        for(Map.Entry<String, PriorityBlockingQueue<String>> entry:priorityQueueMap.entrySet()) {
             String peerAddress = entry.getKey();
             if(Peer.getPeers().isConnected(peerAddress)) {
-                PriorityQueue priorityQueue = entry.getValue();
+                PriorityBlockingQueue priorityQueue = entry.getValue();
                 System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
                 priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
                 Iterator i = priorityQueue.iterator();
@@ -47,7 +48,7 @@ public class Sender implements Callable<Integer> {
     public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, Integer chunkNum, Integer priority, Integer maxChunk) {
 //        System.out.printf("insertChunkIntoPriorityQueue\n");
         if(!priorityQueueMap.containsKey(destinationAddress)) {
-            priorityQueueMap.put(destinationAddress, new PriorityQueue<String>(100, new StringComparator()));
+            priorityQueueMap.put(destinationAddress, new PriorityBlockingQueue<String>(100, new StringComparator()));
         }
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0; i < maxChunk.toString().length() - chunkNum.toString().length(); i++) {
@@ -60,7 +61,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void emptyPriorityQueues() {
-        for(PriorityQueue priorityQueue:priorityQueueMap.values()) {
+        for(PriorityBlockingQueue priorityQueue:priorityQueueMap.values()) {
             priorityQueue.clear();
         }
     }
@@ -109,9 +110,9 @@ public class Sender implements Callable<Integer> {
 
     public Integer call() throws Exception {
        while(true) {
-           for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+           for(Map.Entry<String, PriorityBlockingQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
-               PriorityQueue<String> priorityQueue = entry.getValue();
+               PriorityBlockingQueue<String> priorityQueue = entry.getValue();
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
                boolean pqEmpty = priorityQueue.isEmpty();
                if(isConnected && !pqEmpty ) {

@@ -22,7 +22,7 @@ public class Peer {
     static Peers peers;
     static String host;
     static int port;
-    static ExecutorService executorService = Executors.newFixedThreadPool(5);
+    static ExecutorService executorService = Executors.newFixedThreadPool(15);
 
 
     public static String getHost() {
