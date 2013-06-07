@@ -27,7 +27,7 @@ public class Updater implements Callable<Integer> {
     public Integer call() throws Exception {
         Object obj = new Object();
         InputStream is = socket.getInputStream();
-        System.out.printf("Accepted incoming connection from %s\n", socket.getInetAddress().getHostName());
+        System.out.printf("Updater: Accepted incoming connection from %s\n", socket.getInetAddress().getHostName());
         String senderHostName = socket.getInetAddress().getHostName().toLowerCase();
 //        System.out.printf("senderhostname: %s\n", senderHostName);
 //        System.out.printf("host to port map: %s\n", Peer.getPeers().hostToPortMap);

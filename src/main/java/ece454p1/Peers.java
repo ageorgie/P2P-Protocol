@@ -50,7 +50,7 @@ public class Peers implements Serializable {
     }
 
     public void updatePeerFileMap(Chunk chunk) {
-        System.out.printf("updatePeerFileMap: chunk %s, %d\n", chunk.fileName, chunk.chunkNum);
+        System.out.printf("Peers: updatePeerFileMap: chunk %s, %d\n", chunk.fileName, chunk.chunkNum);
         BitSet bitSet = peerFileMap.get(Peer.getHostAndPort()).get(chunk.getFileName());
         bitSet.set(chunk.chunkNum);
         peerFileMap.get(Peer.getHostAndPort()).put(chunk.getFileName(), bitSet);
@@ -72,7 +72,6 @@ public class Peers implements Serializable {
                 for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
                     String receivedFileName = receivedBitSetEntry.getKey();
                     BitSet receivedBitSet = receivedBitSetEntry.getValue();
-                    System.out.printf("In for loop\n");
 //                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", receivedRemoteHost, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
@@ -83,7 +82,6 @@ public class Peers implements Serializable {
                     }
                 }
             } else {
-                System.out.printf("Going into else\n");
                 peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
 
@@ -97,7 +95,7 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
-        System.out.println("in fillReplicationMap");
+        System.out.println("Peer: in fillReplicationMap");
         Sender.insertPeerFileMapIntoPriorityQueue();
         replicationMap = new HashMap<String, int[]>();
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
@@ -128,14 +126,14 @@ public class Peers implements Serializable {
             }
         }
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
-            System.out.printf("Replication map: %s -- %s\n", entry.getKey(), Arrays.toString(entry.getValue()));
+            System.out.printf("Peers: Replication map: %s -- %s\n", entry.getKey(), Arrays.toString(entry.getValue()));
         }
-        System.out.println("finished fillReplicationMap");
+        System.out.println("Peers: finished fillReplicationMap");
 
     }
 
     public void fillPriorityQueues() {
-        System.out.println("in fillPriorityQueues");
+        System.out.println("Peers: in fillPriorityQueues");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
@@ -172,7 +170,7 @@ public class Peers implements Serializable {
 //                System.out.printf("%s, ", i.next());
 //            }
 //        }
-        System.out.println("finished fillPriorityQueues");
+        System.out.println("Peers: finished fillPriorityQueues");
 
 //        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
 //            String address = entry1.getKey();
@@ -188,9 +186,9 @@ public class Peers implements Serializable {
 
 
     public void insertNewFile(String fileName, int numChunks) {
-        System.out.printf("gethostandport : %s\n", Peer.getHostAndPort());
+        System.out.printf("Peers (insertNewFiles): gethostandport : %s\n", Peer.getHostAndPort());
         Map<String, BitSet> localBitSetMap = peerFileMap.get(Peer.getHostAndPort());
-        System.out.printf("localbitsetmap : %s\n", localBitSetMap);
+        System.out.printf("Peers (insertNewFiles): localbitsetmap : %s\n", localBitSetMap);
         if(!localBitSetMap.containsKey(fileName)) {
             BitSet bitSet = new BitSet(numChunks);
             for(int i = 0;i<=numChunks; i++) {

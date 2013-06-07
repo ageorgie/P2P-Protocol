@@ -65,7 +65,7 @@ public class Sender implements Callable<Integer> {
         Socket socket;
         if(Peer.getPeers().isConnected(String.format("%s %s", host, port))) {
             try {
-            System.out.printf("Send called for host:%s, port %d\n", host, port);
+            System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket(host, port);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -97,9 +97,13 @@ public class Sender implements Callable<Integer> {
            for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
                PriorityQueue<String> priorityQueue = entry.getValue();
-               if(Peer.getPeers().isConnected(peerAddress) && !priorityQueue.isEmpty()) {
+               boolean isConnected = Peer.getPeers().isConnected(peerAddress;
+               boolean pqEmpty = !priorityQueue.isEmpty();
+               System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
+
+               if(isConnected && pqEmpty ) {
                    String poll = priorityQueue.poll();
-                   System.out.printf("Poll for %s: %s\n", peerAddress, poll);
+                   System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
@@ -112,7 +116,7 @@ public class Sender implements Callable<Integer> {
                        }
                        String[] split = destination.split(" ");
                        Chunk chunk = new Chunk(fileName, chunkNum);
-                       System.out.printf("Sending file: %s, chunk %d\n", fileName, chunkNum);
+                       System.out.printf("Sender: Sending file: %s, chunk %d\n", fileName, chunkNum);
                        send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }
