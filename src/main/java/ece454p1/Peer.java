@@ -64,17 +64,19 @@ public class Peer {
         System.out.printf("In ReceiveChunk for %s: %d\n", chunk.getFileName(), chunk.getChunkNum());
         String fileName = chunk.getFileName();
         File file;
+
         if(!fileMap.containsKey(fileName)) {
             String[] split = Peer.getHostAndPort().split(" ");
             file = new File(String.format("%s/ECE454_Downloads/%s-%s/%s", System.getProperty("user.home"), split[0], split[1], fileName));
+            if(file.exists()){
+                file.delete();
+            }
             System.out.printf("Past new file");
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
         }
-
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
-
         try {
 //            FileOutputStream out = new FileOutputStream(file);
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
