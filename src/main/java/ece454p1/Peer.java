@@ -66,7 +66,7 @@ public class Peer {
 //    }
 
     public static String getHostAndPort() {
-        return host + " " + port;
+        return host.toLowerCase() + " " + port;
     }
 
     public static String getBasePath() {
