@@ -30,6 +30,7 @@ public class Sender implements Callable<Integer> {
 
     public static void insertPeerFileMapIntoPriorityQueue() {
         for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
+            System.out.printf("Sender: Inserting peerfileMap into priority queue\n");
             priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
         }
     }
@@ -63,16 +64,18 @@ public class Sender implements Callable<Integer> {
 
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
-        if(Peer.getPeers().isConnected(String.format("%s %s", host, port))) {
+        String peerAddress = String.format("%s %s", host, port);
+        System.out.printf("Send called for peeraddress: %s\n", peerAddress);
+        if(Peer.getPeers().isConnected(peerAddress) {
             try {
             System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
-                socket = new Socket(host, port);
-                OutputStream os = socket.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(os);
-                oos.writeObject(object);
-                oos.close();
-                os.close();
-                socket.close();
+            socket = new Socket(host, port);
+            OutputStream os = socket.getOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos.writeObject(object);
+            oos.close();
+            os.close();
+            socket.close();
             System.out.printf("Sender: Object successfully transferred to %s:%d\n", host, port);
             } catch(ConnectException e) {
                 System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
