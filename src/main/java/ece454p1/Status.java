@@ -58,26 +58,26 @@ public class Status {
     Map<String, Float> weightedLeastReplication;
 
     public Status() {
-        this.numFiles = Peer.getFileMap().size();
-        Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
-        Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
-        Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
-        for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
-            for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
-                if(entry.getKey().equals(Peer.getHostAndPort())){
-                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
-                    this.local.put(entry.getKey(), size);
-                }
-                int numChunks = fileBitSet.getValue().cardinality();
-                if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
-                    numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
-                }
-                if(totalChunksPerFile.containsKey(fileBitSet))
-                numOfChunksInSystem.put(fileBitSet.getKey(), numChunks);
-
-            }
-        }
-        this.
+//        this.numFiles = Peer.getFileMap().size();
+//        Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
+//        Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
+//        Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
+//        for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
+//            for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
+//                if(entry.getKey().equals(Peer.getHostAndPort())){
+//                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
+//                    this.local.put(entry.getKey(), size);
+//                }
+//                int numChunks = fileBitSet.getValue().cardinality();
+//                if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
+//                    numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
+//                }
+//                if(totalChunksPerFile.containsKey(fileBitSet))
+//                numOfChunksInSystem.put(fileBitSet.getKey(), numChunks);
+//
+//            }
+//        }
+//        this.
 
 
     }
@@ -97,14 +97,14 @@ public class Status {
             return size;
         }
     }
-
-    /*Use -1 to indicate if the file requested is not present*/
-    public float fractionPresent(String fileName);
-
-    /*Use -1 to indicate if the file requested is not present*/
-    public int minimumReplicationLevel(String fileName);
-
-    /*Use -1 to indicate if the file requested is not present*/
-    public float averageReplicationLevel(String fileName);
+//
+//    /*Use -1 to indicate if the file requested is not present*/
+//    public float fractionPresent(String fileName);
+//
+//    /*Use -1 to indicate if the file requested is not present*/
+//    public int minimumReplicationLevel(String fileName);
+//
+//    /*Use -1 to indicate if the file requested is not present*/
+//    public float averageReplicationLevel(String fileName);
 
 }
