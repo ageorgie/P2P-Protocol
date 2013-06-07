@@ -29,9 +29,16 @@ public class Sender implements Callable<Integer> {
 
 
     public static void insertPeerFileMapIntoPriorityQueue() {
-        for(PriorityQueue<String> priorityQueue:priorityQueueMap.values()) {
-            System.out.printf("Sender: Inserting peerfileMap into priority queue\n");
+        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
+            PriorityQueue priorityQueue = entry.getValue();
+            System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
             priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
+            Iterator i = priorityQueue.iterator();
+            while(i.hasNext()) {
+                System.out.printf("%s,", i.next());
+            }
+            System.out.printf("\n");
+
         }
     }
 
