@@ -81,10 +81,12 @@ public class Peers implements Serializable {
                     }
                 }
             } else {
+                System.out.printf("Going into else");
                 peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
 
         }
+        System.out.printf("before fillreplicationmap. %s", peerFileMap);
         // Fill ReplicatioMap and Priority Queues
         fillReplicationMap();
         Sender.emptyPriorityQueues();
