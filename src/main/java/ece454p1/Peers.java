@@ -144,23 +144,26 @@ public class Peers implements Serializable {
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
-                    boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
-                    if(!replicationFactor) {
-                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
+                    if(Peer.getPeers().isConnected(peerAddress)) {
+                        boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
+                        if(!replicationFactor) {
+                            Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
+                        }
                     }
                 }
            }
         }
-        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
-            String address = entry1.getKey();
-            PriorityQueue priorityQueue = entry1.getValue();
-            Iterator iterator = priorityQueue.iterator();
-            System.out.printf("priority queue for %s contains:", entry1.getKey());
-            while(iterator.hasNext()) {
-                System.out.printf("%s,", iterator.next());
-            }
-            System.out.print("\n");
-        }
+
+//        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
+//            String address = entry1.getKey();
+//            PriorityQueue priorityQueue = entry1.getValue();
+//            Iterator iterator = priorityQueue.iterator();
+//            System.out.printf("priority queue for %s contains:", entry1.getKey());
+//            while(iterator.hasNext()) {
+//                System.out.printf("%s,", iterator.next());
+//            }
+//            System.out.print("\n");
+//        }
     }
 
 

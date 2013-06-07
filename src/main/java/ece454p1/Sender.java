@@ -97,9 +97,9 @@ public class Sender implements Callable<Integer> {
            for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
                String peerAddress = entry.getKey();
                PriorityQueue<String> priorityQueue = entry.getValue();
-               if(!priorityQueue.isEmpty()) {
+               if(Peer.getPeers().isConnected(peerAddress) && !priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-                   System.out.printf("Poll: %s\n", poll);
+                   System.out.printf("Poll for %s: %s\n", peerAddress, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
