@@ -204,7 +204,8 @@ public class Peers implements Serializable {
         InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
-        while ((line = br.readLine().toLowerCase()) != null) {
+        while ((line = br.readLine()) != null) {
+            line = line.toLowerCase();
             if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
                 output.add(line);
             }
