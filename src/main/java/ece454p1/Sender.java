@@ -98,7 +98,7 @@ public class Sender implements Callable<Integer> {
                String peerAddress = entry.getKey();
                PriorityQueue<String> priorityQueue = entry.getValue();
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
-               boolean pqEmpty = !priorityQueue.isEmpty();
+               boolean pqEmpty = priorityQueue.isEmpty();
                if(isConnected && !pqEmpty ) {
                    System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
                    String poll = priorityQueue.poll();
