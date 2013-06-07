@@ -41,8 +41,8 @@ public class Peer {
             String[] split = line.split(" ");
             if(!split[0].toLowerCase().equals(host)) {
                 peers.hostToPortMap.put(split[0].toLowerCase(), Integer.parseInt(split[1]));
+                peers.setConnectionState(line.toLowerCase(), true);
             }
-            peers.setConnectionState(line.toLowerCase(), true);
             if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);
             }
