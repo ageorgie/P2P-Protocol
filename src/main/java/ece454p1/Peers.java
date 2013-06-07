@@ -160,8 +160,17 @@ public class Peers implements Serializable {
                     }
                 }
            }
-            System.out.println("finished fillPriorityQueues");
+
         }
+
+        for(Map.Entry<String, PriorityQueue<String>> entry1 :Sender.priorityQueueMap.entrySet()) {
+            System.out.printf("Queue enumeration for peer: %s --- ", entry1.getKey());
+            Iterator i = entry1.getValue().iterator();
+            while(i.hasNext()) {
+                System.out.printf("%s, ", i.next());
+            }
+        }
+        System.out.println("finished fillPriorityQueues");
 
 //        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
 //            String address = entry1.getKey();
