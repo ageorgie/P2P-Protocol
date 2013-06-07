@@ -126,7 +126,7 @@ public class Peers implements Serializable {
             }
         }
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
-
+            System.out.printf("Peers: Filename: %s --> ReplicationArray: %s", entry.getKey(), Arrays.toString(entry.getValue()));
         }
 //        System.out.println("Peers: finished fillReplicationMap");
 
