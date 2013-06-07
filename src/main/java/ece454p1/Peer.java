@@ -104,9 +104,9 @@ public class Peer {
         status = new Status();
         System.out.printf("status: %s", status.toString());
         System.out.printf("Weighted Least Replication: %s", status.weightedLeastReplication);
-        System.out.printf("Least Replication: %s", status.leastReplication.toString());
-        System.out.printf("Fraction of local files: %s", status.local.toString());
-        System.out.printf("Fraction of system files: %s", status.system.toString());
+        System.out.printf("Least Replication: %s", status.leastReplication);
+        System.out.printf("Fraction of local files: %s", status.local);
+        System.out.printf("Fraction of system files: %s", status.system);
         System.out.printf("Number of Files: %d", status.numberOfFiles());
         return -1;
     };
