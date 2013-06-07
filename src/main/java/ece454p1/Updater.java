@@ -57,7 +57,10 @@ public class Updater implements Callable<Integer> {
                 Peer.getPeers().updatePeerFileMap(chunk);
             } catch (Exception e){
                 System.out.println("Error while writing to file");
+            } finally {
+                raf.close();
             }
+
         } catch (IOException ex) {
             System.out.println("Caught ioexception");
             throw ex;
