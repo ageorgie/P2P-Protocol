@@ -129,7 +129,7 @@ public class Peers implements Serializable {
                     String peerAddress = peerToBitSetEntry.getKey();
                     boolean replicationFactor = peerToBitSetEntry.getValue().get(chunkNum);
                     if(!replicationFactor) {
-                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum]);
+                        Sender.insertChunkIntoPriorityQueue(peerAddress, fileName, chunkNum, replicationFactorArray[chunkNum], replicationFactorArray.length);
                     }
                 }
            }
