@@ -44,7 +44,6 @@ public class Peer {
             bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
         br.close();
-        System.out.printf("initializepeers bitsetmap: %s\n", bitSetMap);
         peers = new Peers(bitSetMap);
     }
 
@@ -61,7 +60,7 @@ public class Peer {
     }
 
     public static void ReceiveChunk(Chunk chunk) throws IOException {
-        System.out.printf("In ReceiveChunk for %s: %d\n", chunk.getFileName(), chunk.getChunkNum());
+//        System.out.printf("In ReceiveChunk for %s: %d\n", chunk.getFileName(), chunk.getChunkNum());
         String fileName = chunk.getFileName();
         File file;
 
@@ -71,34 +70,25 @@ public class Peer {
             if(file.exists()){
                 file.delete();
             }
-            System.out.printf("Past new file");
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
         }
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
         try {
-//            FileOutputStream out = new FileOutputStream(file);
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
             try {
-//                FileChannel ch = out.getChannel();
-////                ch.position(byteOffset);
-////                ch.write(ByteBuffer.wrap(chunk.getByteArray()));
                 raf.seek(byteOffset);
                 raf.write(chunk.getByteArray());
-//                out.write(chunk.getByteArray(), byteOffset, chunk.getByteArray().length);
                 peers.updatePeerFileMap(chunk);
-                System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunk.chunkNum, chunk.byteArray.length);
                 String chunkStr = new String(chunk.byteArray);
                 System.err.println(chunkStr);
-            } finally {
-//                out.close();
+            } catch (Exception e){
+                System.out.println("Error while writing to file");
             }
         } catch (IOException ex) {
            throw ex;
         }
-
-//        peers.updatePeerFileMap(chunk);
     }
 
 
@@ -106,14 +96,13 @@ public class Peer {
 	public static int insert(String filePath) {
 
         File file = new File(filePath);
-        System.out.println(file);
         if(!file.isFile() || !file.canRead()) {
-            System.out.println("Can't read DOG!");
+//            System.out.println("Can't read DOG!");
             return -1;
         }
         int numChunks = (int) Math.ceil((file.length() * 1.0000)/(Config.CHUNK_SIZE * 1.0000));
-        System.out.printf("file length: %d\n", file.length());
-        System.out.printf("numchunks: %d\n", numChunks );
+//        System.out.printf("file length: %d\n", file.length());
+//        System.out.printf("numchunks: %d\n", numChunks );
         String[] splitPath = filePath.split("/");
         String fileName = splitPath[splitPath.length - 1];
         peers.insertNewFile(fileName, numChunks);

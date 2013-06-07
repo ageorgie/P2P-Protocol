@@ -64,7 +64,7 @@ public class Sender implements Callable<Integer> {
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
         try {
-            System.out.printf("Send called for host:%s, port %d\n", host, port);
+//            System.out.printf("Send called for host:%s, port %d\n", host, port);
             socket = new Socket(host, port);
             OutputStream os = socket.getOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -72,7 +72,7 @@ public class Sender implements Callable<Integer> {
             oos.close();
             os.close();
             socket.close();
-            System.out.printf("Sender: Object successfully transferred\n", host, port);
+//            System.out.printf("Sender: Object successfully transferred\n", host, port);
         } catch(ConnectException e) {
             System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
         }
@@ -96,7 +96,7 @@ public class Sender implements Callable<Integer> {
                PriorityQueue<String> priorityQueue = entry.getValue();
                if(!priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-                   System.out.printf("Poll: %s\n", poll);
+//                   System.out.printf("Poll: %s\n", poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
