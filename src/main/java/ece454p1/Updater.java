@@ -24,20 +24,26 @@ public class Updater implements Callable<Integer> {
 
 
     public static void receiveChunk(Chunk chunk) throws IOException {
+        System.out.printf("Updater: called receivechunk file: %s, chunk: %s\n", chunk.getFileName(), chunk.getChunkNum());
         String fileName = chunk.getFileName();
         File file;
         Map<String, File> fileMap = Peer.getFileMap();
+        System.out.println("1");
         if(!fileMap.containsKey(fileName)) {
             String[] split = Peer.getHostAndPort().split(" ");
             file = new File(String.format("%s/ECE454_Downloads/%s-%s/%s", System.getProperty("user.home"), split[0], split[1], fileName));
+            System.out.println("2");
             if(file.exists()){
                 file.delete();
             }
+            System.out.println("3");
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
         }
+        System.out.println("4");
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
+        System.out.println("5");
         try {
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
             try {
