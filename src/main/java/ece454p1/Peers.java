@@ -97,6 +97,7 @@ public class Peers implements Serializable {
 
 
     public void fillReplicationMap() {
+        System.out.println("in fillReplicationMap");
         Sender.insertPeerFileMapIntoPriorityQueue();
         replicationMap = new HashMap<String, int[]>();
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
@@ -126,11 +127,12 @@ public class Peers implements Serializable {
                 replicationMap.put(fileName, fileReplicationArray);
             }
         }
+        System.out.println("finished fillReplicationMap");
 
     }
 
     public void fillPriorityQueues() {
-
+        System.out.println("in fillPriorityQueues");
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
@@ -158,6 +160,7 @@ public class Peers implements Serializable {
                     }
                 }
            }
+            System.out.println("finished fillPriorityQueues");
         }
 
 //        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
