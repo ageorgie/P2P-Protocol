@@ -52,7 +52,7 @@ public class Updater implements Callable<Integer> {
             raf.seek(byteOffset);
 //            System.out.println("7");
             raf.write(chunk.getByteArray());
-            System.out.println("Before updatePeerFileMap");
+//            System.out.println("Before updatePeerFileMap");
             Peer.getPeers().updatePeerFileMap(chunk);
         } catch (Exception e){
             System.out.println("Error while writing to file");
@@ -97,7 +97,7 @@ public class Updater implements Callable<Integer> {
         } else {
 //            throw new Exception("Updater: Received object type is not recognized");
         }
-        System.out.println("way down here");
+//        System.out.println("way down here");
 
         return 1;
     }
