@@ -1,7 +1,7 @@
 package ece454p1;
 
 import javax.sound.midi.SysexMessage;
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -19,7 +19,6 @@ public class Peers implements Serializable {
     Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
     Map<String, Integer> hostToPortMap = new HashMap<String, Integer>();
 
-
     public void setConnectionState(String peerAddress, boolean connected) {
         connectionStateMap.put(peerAddress, connected);
     }
@@ -32,13 +31,13 @@ public class Peers implements Serializable {
         this.peerFileMap = peerFileMap;
     }
 
-    public Peers() {
+    public Peers() throws IOException {
         for(String address: this.getOtherPeerAddresses()) {
             setConnectionState(address, true);
         }
     }
 
-    public Peers(Map<String, Map<String, BitSet>> peerFileMap) {
+    public Peers(Map<String, Map<String, BitSet>> peerFileMap) throws IOException {
         this.peerFileMap = peerFileMap;
         for(String address: this.getOtherPeerAddresses()) {
             setConnectionState(address, true);
@@ -194,14 +193,24 @@ public class Peers implements Serializable {
         }
     }
 
-    public List<String> getOtherPeerAddresses() {
+    public List<String> getOtherPeerAddresses() throws IOException {
         List<String> output = new LinkedList<String>();
-        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
-            String[] split = entry.getKey().split(" ");
-            if(!split[0].toLowerCase().equals(Peer.host.toLowerCase()) || !(Integer.parseInt(split[1]) == Peer.port)) {
-                output.add(entry.getKey());
+        InputStream in = getClass().getClassLoader().getResourceAsStream("addresses.txt");
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while ((line = br.readLine()) != null) {
+            if(!Peer.getHostAndPort().equals(line.toLowerCase())) {
+                output.add(line.toLowerCase());
             }
+            peerFileMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
+        br.close();
+//        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
+//            String[] split = entry.getKey().split(" ");
+//            if(!split[0].toLowerCase().equals(Peer.host.toLowerCase()) || !(Integer.parseInt(split[1]) == Peer.port)) {
+//                output.add(entry.getKey());
+//            }
+//        }
         return output;
     }
 
