@@ -87,7 +87,7 @@ public class Peer {
                 String chunkStr = new String(chunk.byteArray);
                 System.err.println(chunkStr);
             } finally {
-                out.close();
+//                out.close();
             }
         } catch (IOException ex) {
            throw ex;
