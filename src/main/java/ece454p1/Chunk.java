@@ -14,7 +14,7 @@ public class Chunk implements Serializable {
 
     String fileName;
     int chunkNum;
-    Byte[] byteArray;
+    byte[] byteArray = new byte[Config.CHUNK_SIZE];
     Map<String, Map<String, BitSet>> peerFileMap;
     String destination;
 
@@ -38,12 +38,14 @@ public class Chunk implements Serializable {
             }
         } catch(EOFException e) {
         } finally {
-            byteArray = byteList.toArray(new Byte[0]);
+            byteArray = new byte[byteList.size()];
+            for(int i = 0; i<byteList.size(); i++) {
+                byteArray[i] = byteList.get(i).byteValue();
+            }
         }
-
     }
 
-    public Chunk(String fileName, int chunkNum, Byte[] byteArray) {
+    public Chunk(String fileName, int chunkNum, byte[]byteArray) {
         this.fileName = fileName;
         this.chunkNum = chunkNum;
         this.byteArray = byteArray;
@@ -66,11 +68,12 @@ public class Chunk implements Serializable {
         this.chunkNum = chunkNum;
     }
 
-    public Byte[] getByteArray() {
+    public byte[] getByteArray() {
+
         return byteArray;
     }
 
-    public void setByteArray(Byte[] byteArray) {
+    public void setByteArray(byte[] byteArray) {
         this.byteArray = byteArray;
     }
 
