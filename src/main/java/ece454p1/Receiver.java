@@ -32,6 +32,7 @@ public class Receiver implements Callable<Integer> {
     }
 
     public Integer call() throws Exception {
+        System.out.println("Starting receiver...");
         try {
             while(true) {
                 Socket client = serverSocket.accept();

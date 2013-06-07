@@ -104,6 +104,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public Integer call() throws Exception {
+       System.out.println("Starting sender...");
        while(true) {
            Thread.sleep(400);
            for(Map.Entry<String, PriorityBlockingQueue<String>> entry: priorityQueueMap.entrySet()) {
