@@ -17,12 +17,14 @@ public class Chunk implements Serializable {
     byte[] byteArray = new byte[Config.CHUNK_SIZE];
     Map<String, Map<String, BitSet>> peerFileMap;
     String destination;
+    int totalNumChunks;
 
     public String getDestination() {
         return destination;
     }
 
-    public Chunk(String fileName, int chunkNum) throws IOException {
+    public Chunk(String fileName, int chunkNum, int totalNumChunks) throws IOException {
+        this.totalNumChunks = totalNumChunks;
         File file = Peer.getFileMap().get(fileName);
         if(file==null) {
             throw new FileNotFoundException();
