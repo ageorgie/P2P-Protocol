@@ -38,7 +38,7 @@ public class Updater implements Callable<Integer> {
 
         if(obj.getClass().isAssignableFrom(Chunk.class)) {
             Chunk chunk = (Chunk) obj;
-            System.out.printf("Updater: Received chunk: %s\n", chunk);
+            System.out.printf("Updater: Received file: %s, chunk: %s\n", chunk.getFileName(), chunk.getChunkNum());
             Peer.ReceiveChunk(chunk);
         } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
             Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
