@@ -35,6 +35,7 @@ public class Updater implements Callable<Integer> {
             System.out.println("2");
             if(file.exists()){
                 file.delete();
+                file.createNewFile();
             }
             file.setReadable(true);
             file.setWritable(true);
