@@ -58,53 +58,87 @@ public class Status {
     Map<String, Float> weightedLeastReplication;
 
     public Status() {
-//        this.numFiles = Peer.getFileMap().size();
-//        Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
-//        Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
-//        Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
-//        for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
-//            for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
-//                if(entry.getKey().equals(Peer.getHostAndPort())){
-//                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
-//                    this.local.put(entry.getKey(), size);
-//                }
-//                int numChunks = fileBitSet.getValue().cardinality();
-//                if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
-//                    numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
-//                }
-//                if(totalChunksPerFile.containsKey(fileBitSet))
-//                numOfChunksInSystem.put(fileBitSet.getKey(), numChunks);
-//
-//            }
-//        }
-//        this.
+        this.numFiles = Peer.getFileMap().size();
+        //System and local
+        Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
+        Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
+        Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
+        for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
+            for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
+                if(entry.getKey().equals(Peer.getHostAndPort())){
+                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
+                    this.local.put(entry.getKey(), size);
+                }
+                int numChunks = fileBitSet.getValue().cardinality();
+                if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
+                    numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
+                }
+                if(!totalChunksPerFile.containsKey(fileBitSet.getKey())){
+                    totalChunksPerFile.put(fileBitSet.getKey(), (fileBitSet.getValue().length()-1));
+                }
+                numOfChunksInSystem.put(fileBitSet.getKey(), numChunks);
+            }
+        }
 
+        for(Map.Entry<String, Integer> entry : numOfChunksInSystem.entrySet()){
+            this.system.put(entry.getKey(), ((float) entry.getValue())/((float)totalChunksPerFile.get(entry.getKey())));
+        }
 
+        for(Map.Entry<String, int[]> entry : Peer.getPeers().replicationMap.entrySet()){
+            int minVal = 1000000;
+            for(int i : entry.getValue()){
+                if(i < minVal){
+                    minVal = i;
+                }
+            }
+            this.leastReplication.put(entry.getKey(), minVal);
+            this.weightedLeastReplication.put(entry.getKey(), ((float)minVal)/((entry.getValue().length)));
+        }
     }
 //	float[] weightedLeastReplication;
 
     public int numberOfFiles(){
-        return Peer.getFileMap().size();
+        return numFiles;
     }
 
     /*Use -1 to indicate if the file requested is not present*/
     public float fractionPresentLocally(String fileName){
-        BitSet bitset = Peer.getPeers().getPeerFileMap().get(Peer.getHostAndPort()).get(fileName);
-        if(bitset == null){
+        Float localFraction = local.get(fileName);
+        if(localFraction == null){
             return -1;
         } else {
-            float size = ((float) bitset.cardinality())/((float) bitset.length());
-            return size;
+            return localFraction;
         }
     }
-//
-//    /*Use -1 to indicate if the file requested is not present*/
-//    public float fractionPresent(String fileName);
-//
-//    /*Use -1 to indicate if the file requested is not present*/
-//    public int minimumReplicationLevel(String fileName);
-//
-//    /*Use -1 to indicate if the file requested is not present*/
-//    public float averageReplicationLevel(String fileName);
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public float fractionPresent(String fileName){
+        Float fraction =  system.get(fileName);
+        if(fraction == null){
+            return -1;
+        } else {
+            return fraction;
+        }
+    }
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public int minimumReplicationLevel(String fileName){
+        Integer leastReplicated = leastReplication.get(fileName);
+        if(leastReplicated == null){
+            return -1;
+        } else {
+            return leastReplicated;
+        }
+    }
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public float averageReplicationLevel(String fileName){
+        Float average = weightedLeastReplication.get(fileName);
+        if(average == null){
+            return -1;
+        } else {
+            return average;
+        }
+    }
 
 }
