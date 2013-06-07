@@ -205,14 +205,14 @@ public class Peer {
                 Peer.leave();
                 break;
             case insert:
-                System.out.println("It's amazing");
+//                System.out.println("It's amazing");
                 Peer.insert(split[1]);
                 break;
             case query:
                 Peer.query(null);
                 break;
             default:
-                System.out.println("Command not supported");
+//                System.out.println("Command not supported");
                 break;
         }
 

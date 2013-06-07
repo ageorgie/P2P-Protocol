@@ -15,7 +15,7 @@ public class StateBroadcaster implements Callable<Integer> {
 
     public Integer call() throws InterruptedException {
         while(true) {
-            System.out.println("Statebroadcaster: top of loop");
+//            System.out.println("Statebroadcaster: top of loop");
             System.out.printf("Statebroadcaster: Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
             Sender.insertPeerFileMapIntoPriorityQueue();
             Thread.sleep(5000);

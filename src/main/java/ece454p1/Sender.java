@@ -34,13 +34,13 @@ public class Sender implements Callable<Integer> {
             String peerAddress = entry.getKey();
             if(Peer.getPeers().isConnected(peerAddress)) {
                 PriorityBlockingQueue priorityQueue = entry.getValue();
-                System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
+//                System.out.printf("Sender: Inserting peerfileMap into priority queue for %s. Contents:", entry.getKey());
                 priorityQueue.offer(String.format("%s_!!PeerFileMap!!", 0));
                 Iterator i = priorityQueue.iterator();
-                while(i.hasNext()) {
-                    System.out.printf("%s,", i.next());
-                }
-                System.out.printf("\n");
+//                while(i.hasNext()) {
+//                    System.out.printf("%s,", i.next());
+//                }
+//                System.out.printf("\n");
             }
         }
     }
@@ -76,16 +76,16 @@ public class Sender implements Callable<Integer> {
         Socket socket;
         String peerAddress = String.format("%s %s", host, port);
         if(Peer.getPeers().isConnected(peerAddress)) {
-            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
+//            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
             try {
                 System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket(host, port);
-                System.out.printf("Sender: Socket Opened\n");
+//                System.out.printf("Sender: Socket Opened\n");
                 OutputStream os = socket.getOutputStream();
 
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
-                System.out.printf("Sender: wrote object\n");
+//                System.out.printf("Sender: wrote object\n");
                 oos.close();
                 os.close();
                 socket.close();
