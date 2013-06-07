@@ -19,8 +19,6 @@ public class StateBroadcaster implements Callable<Integer> {
 //            System.out.println("Statebroadcaster: top of loop");
             System.out.printf("Statebroadcaster: Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
             Sender.setBroadcast(true);
-            while(!Sender.getSentBitmap()){}
-            Sender.setBroadcast(false);
             Thread.sleep(5000);
         }
     }

@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
-<<<<<<< HEAD
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,30 +18,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Sender implements Callable<Integer> {
 
-    static Map<String, PriorityBlockingQueue<String>> priorityQueueMap;
-    static Boolean broadcast;
-    static Boolean sentBitmap;
-
-    public static Boolean getSentBitmap() {
-        return sentBitmap;
-    }
+    static Map<String, PriorityQueue<String>> priorityQueueMap;
+    static AtomicBoolean broadcast;
 
     public Sender() throws IOException, InterruptedException {
-        priorityQueueMap = new HashMap<String, PriorityBlockingQueue<String>>();
-        broadcast = false;
-        sentBitmap = true;
+        priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
+        broadcast.set(false);
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
             priorityQueueMap.put(address, new PriorityBlockingQueue<String>());
         }
         sendPeerFileMap();
     }
 
-    public static void setSentBitmap(Boolean sentBitmap) {
-        Sender.sentBitmap = sentBitmap;
-    }
-
     public static void setBroadcast(Boolean broadcast) {
-        Sender.broadcast = broadcast;
+        Sender.broadcast.getAndSet(broadcast);
     }
 //    public static void insertPeerFileMapIntoPriorityQueue() {
 //        for(Map.Entry<String, PriorityQueue<String>> entry:priorityQueueMap.entrySet()) {
@@ -125,34 +114,32 @@ public class Sender implements Callable<Integer> {
 
     public Integer call() throws Exception {
        while(true) {
-         if(broadcast){
-             sendPeerFileMap();
-             setSentBitmap(true);
-             while(broadcast){}
-             setSentBitmap(false);
-         } else {
-             for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
-                 String peerAddress = entry.getKey();
-                 PriorityQueue<String> priorityQueue = entry.getValue();
-                 boolean isConnected = Peer.getPeers().isConnected(peerAddress);
-                 boolean pqEmpty = priorityQueue.isEmpty();
-                 if(isConnected && !pqEmpty ) {
-                     System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
-                     String poll = priorityQueue.poll();
-                     System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
-                     String[] pollSplit = poll.split("_");
-                     String fileName = pollSplit[1];
-                     int chunkNum = Integer.parseInt(pollSplit[2]);
-                     String destination = pollSplit[3];
-                     if(destination == null) {
-                         throw new Exception(String.format("Socket for destination address %s does not exist", destination));
-                     }
-                     String[] split = destination.split(" ");
-                     Chunk chunk = new Chunk(fileName, chunkNum);
-                     System.out.printf("Sender: Sending file: %s, chunk %d\n", fileName, chunkNum);
-                     send(split[0], Integer.parseInt(split[1]), chunk);
-                 }
-              }
+           if(broadcast.get()){
+               sendPeerFileMap();
+               setBroadcast(false);
+           } else {
+               for(Map.Entry<String, PriorityQueue<String>> entry: priorityQueueMap.entrySet()) {
+                   String peerAddress = entry.getKey();
+                   PriorityQueue<String> priorityQueue = entry.getValue();
+                   boolean isConnected = Peer.getPeers().isConnected(peerAddress);
+                   boolean pqEmpty = priorityQueue.isEmpty();
+                   if(isConnected && !pqEmpty ) {
+                       System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
+                       String poll = priorityQueue.poll();
+                       System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
+                       String[] pollSplit = poll.split("_");
+                       String fileName = pollSplit[1];
+                       int chunkNum = Integer.parseInt(pollSplit[2]);
+                       String destination = pollSplit[3];
+                       if(destination == null) {
+                           throw new Exception(String.format("Socket for destination address %s does not exist", destination));
+                       }
+                       String[] split = destination.split(" ");
+                       Chunk chunk = new Chunk(fileName, chunkNum);
+                       System.out.printf("Sender: Sending file: %s, chunk %d\n", fileName, chunkNum);
+                       send(split[0], Integer.parseInt(split[1]), chunk);
+                   }
+               }
            }
         }
     }
