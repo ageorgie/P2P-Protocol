@@ -117,7 +117,11 @@ public class Peer {
         return 0;
     };
 
-	public static int query(Status status){return -1;};
+	public static int query(Status status){
+
+
+        return -1;
+    };
 
 
 	/*

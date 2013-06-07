@@ -1,5 +1,7 @@
 package ece454p1;
 
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,23 +12,7 @@ import java.util.Map;
  * implement to access such data You will need to create methods to populate the
  * Status data.
  **/
-public abstract class Status {
-
-	public abstract int numberOfFiles();
-
-	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float fractionPresentLocally(String fileName);
-
-	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float fractionPresent(String fileName);
-
-	/*Use -1 to indicate if the file requested is not present*/
-	public abstract int minimumReplicationLevel(String fileName);
-
-	/*Use -1 to indicate if the file requested is not present*/
-	public abstract float averageReplicationLevel(String fileName);
-
-
+public class Status {
 
 	// This is very cheesy and very lazy, but the focus of this assignment
 	// is not on dynamic containers but on the BT p2p file distribution
@@ -70,6 +56,55 @@ public abstract class Status {
 	 * this is the average level of replication of the file
 	 */
     Map<String, Float> weightedLeastReplication;
+
+    public Status() {
+        this.numFiles = Peer.getFileMap().size();
+        Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
+        Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
+        Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
+        for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
+            for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
+                if(entry.getKey().equals(Peer.getHostAndPort())){
+                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
+                    this.local.put(entry.getKey(), size);
+                }
+                int numChunks = fileBitSet.getValue().cardinality();
+                if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
+                    numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
+                }
+                if(totalChunksPerFile.containsKey(fileBitSet))
+                numOfChunksInSystem.put(fileBitSet.getKey(), numChunks);
+
+            }
+        }
+        this.
+
+
+    }
 //	float[] weightedLeastReplication;
+
+    public int numberOfFiles(){
+        return Peer.getFileMap().size();
+    }
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public float fractionPresentLocally(String fileName){
+        BitSet bitset = Peer.getPeers().getPeerFileMap().get(Peer.getHostAndPort()).get(fileName);
+        if(bitset == null){
+            return -1;
+        } else {
+            float size = ((float) bitset.cardinality())/((float) bitset.length());
+            return size;
+        }
+    }
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public float fractionPresent(String fileName);
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public int minimumReplicationLevel(String fileName);
+
+    /*Use -1 to indicate if the file requested is not present*/
+    public float averageReplicationLevel(String fileName);
 
 }
