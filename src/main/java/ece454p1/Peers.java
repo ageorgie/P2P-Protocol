@@ -96,7 +96,7 @@ public class Peers implements Serializable {
 
     public void fillReplicationMap() {
         System.out.println("Peer: in fillReplicationMap");
-        Sender.insertPeerFileMapIntoPriorityQueue();
+//        Sender.insertPeerFileMapIntoPriorityQueue();
         replicationMap = new HashMap<String, int[]>();
         for(Map<String, BitSet> fileNameToBitSetMap:peerFileMap.values()) {
             for(Map.Entry entry:fileNameToBitSetMap.entrySet()) {
