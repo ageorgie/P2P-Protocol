@@ -80,7 +80,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void sendPeerFileMap() throws IOException {
-        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
+//        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
         List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
         for(String address: addresses) {
             String[] split = address.split(" ");
@@ -96,7 +96,7 @@ public class Sender implements Callable<Integer> {
                PriorityQueue<String> priorityQueue = entry.getValue();
                if(!priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-//                   System.out.printf("Poll: %s\n", poll);
+                   System.out.printf("Poll: %s\n", poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
                        sendPeerFileMap();
@@ -109,7 +109,7 @@ public class Sender implements Callable<Integer> {
                        }
                        String[] split = destination.split(" ");
                        Chunk chunk = new Chunk(fileName, chunkNum);
-                       System.out.printf("Sending file: %s, chunk %d", fileName, chunkNum);
+                       System.out.printf("Sending file: %s, chunk %d\n", fileName, chunkNum);
                        send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }

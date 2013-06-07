@@ -127,6 +127,11 @@ public class Peers implements Serializable {
             String address = entry1.getKey();
             PriorityQueue priorityQueue = entry1.getValue();
             Iterator iterator = priorityQueue.iterator();
+            System.out.printf("priority queue for %s contains:", entry1.getKey());
+            while(iterator.hasNext()) {
+                System.out.printf("%s,", iterator.next());
+            }
+            System.out.print("\n");
         }
     }
 
