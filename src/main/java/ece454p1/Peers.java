@@ -86,7 +86,7 @@ public class Peers implements Serializable {
             }
 
         }
-        System.out.printf("before fillreplicationmap. %s", peerFileMap);
+//        System.out.printf("before fillreplicationmap. %s", peerFileMap);
         // Fill ReplicatioMap and Priority Queues
         fillReplicationMap();
         Sender.emptyPriorityQueues();
@@ -208,21 +208,15 @@ public class Peers implements Serializable {
         String line;
         while ((line = br.readLine()) != null) {
             line = line.toLowerCase();
-            System.out.printf("lower case peer host: %s\n", Peer.getHost().toLowerCase());
-            System.out.printf("lower case line host: %s\n", line.split(" ")[0].toLowerCase());
+//            System.out.printf("lower case peer host: %s\n", Peer.getHost().toLowerCase());
+//            System.out.printf("lower case line host: %s\n", line.split(" ")[0].toLowerCase());
             if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
                 output.add(line);
             }
-            System.out.printf("output: %s\n", output);
+//            System.out.printf("output: %s\n", output);
 //            peerFileMap.put(line, new HashMap<String, BitSet>());
         }
         br.close();
-//        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
-//            String[] split = entry.getKey().split(" ");
-//            if(!split[0].toLowerCase().equals(Peer.host.toLowerCase()) || !(Integer.parseInt(split[1]) == Peer.port)) {
-//                output.add(entry.getKey());
-//            }
-//        }
         return output;
     }
 
