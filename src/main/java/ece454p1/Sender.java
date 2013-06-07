@@ -79,7 +79,7 @@ public class Sender implements Callable<Integer> {
                     socket.connect(new InetSocketAddress(host, port), 1000);
 //                    System.out.printf("Sender: Socket Opened\n");
                 } catch (SocketTimeoutException e) {
-                    System.out.printf("Sender: Socket connection timed out\n");
+                    System.err.printf("Sender: Socket connection timed out\n");
                     Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
                     return;
                 }
@@ -90,9 +90,9 @@ public class Sender implements Callable<Integer> {
                 oos.close();
                 os.close();
                 socket.close();
-                System.out.printf("Sender: Object successfully transferred to %s:%d\n", host, port);
+                System.err.printf("Sender: Object successfully transferred to %s:%d\n", host, port);
             } catch(ConnectException e) {
-                System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
+                System.err.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
                 Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
             }
         }
@@ -104,7 +104,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public Integer call() throws Exception {
-       System.out.println("Starting sender...");
+       System.err.println("Starting sender...");
        while(true) {
            Thread.sleep(400);
            for(Map.Entry<String, PriorityBlockingQueue<String>> entry: priorityQueueMap.entrySet()) {
@@ -113,7 +113,7 @@ public class Sender implements Callable<Integer> {
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
                if(isConnected && !priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s \n" ,peerAddress, isConnected, poll);
+                   System.err.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s \n" ,peerAddress, isConnected, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
 //                       System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
@@ -133,7 +133,7 @@ public class Sender implements Callable<Integer> {
                        }
                        String[] split = destination.split(" ");
                        Chunk chunk = new Chunk(fileName, chunkNum);
-                       System.out.printf("Sender: Sending file: %s, chunk %d\n", fileName, chunkNum);
+                       System.err.printf("Sender: Sending file: %s, chunk %d\n", fileName, chunkNum);
                        send(split[0], Integer.parseInt(split[1]), chunk);
                    }
                }

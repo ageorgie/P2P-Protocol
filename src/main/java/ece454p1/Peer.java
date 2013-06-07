@@ -53,23 +53,23 @@ public class Peer {
         }
         br.close();
         peers.setPeerFileMap(peerFileMap);
-        System.out.printf("Peer created. Host: %s Port: %d", host, port);
+        System.err.printf("Peer created. Host: %s Port: %d", host, port);
         fileMap = new HashMap<String, File>();
         String basePath =String.format("%s/ECE454_Downloads/", System.getProperty("user.home"));
         String path = String.format("%s/%s-%d/", basePath, host, port);
-        System.out.println(path);
+        System.err.println(path);
 
         File baseDir = new File(basePath);
         if (!baseDir.exists()) {
             boolean mkdirOut = baseDir.mkdir();
-            System.out.printf("mkdir returned %s\n", mkdirOut);
+            System.err.printf("mkdir returned %s\n", mkdirOut);
         }
         baseDir.setReadable(true,true);
         baseDir.setWritable(true, true);
         File theDir = new File(path);
         if (!theDir.exists()) {
             boolean mkdirOut = theDir.mkdir();
-            System.out.printf("mkdir returned %s\n", mkdirOut);
+            System.err.printf("mkdir returned %s\n", mkdirOut);
         }
         theDir.setReadable(true, true);
         theDir.setWritable(true,true);
