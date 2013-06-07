@@ -89,7 +89,7 @@ public class Peers implements Serializable {
                     }
                 }
             } else {
-                System.out.printf("Going into else");
+                System.out.printf("Going into else\n");
                 peerFileMap.put(receivedRemoteHost, receivedBitSetMap);
             }
 
@@ -204,8 +204,9 @@ public class Peers implements Serializable {
                     peerFileMap.get(entry.getKey()).put(fileName, bitSet);
                 }
             }
-
-
+            fillReplicationMap();
+            Sender.emptyPriorityQueues();
+            fillPriorityQueues();
         }
     }
 
