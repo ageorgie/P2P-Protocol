@@ -33,7 +33,7 @@ public class Peer {
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
             String[] split = line.split(" ");
-            if(host.equals(split[0])) {
+            if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);
             }
             bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
