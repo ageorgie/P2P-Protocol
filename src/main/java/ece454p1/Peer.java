@@ -27,7 +27,7 @@ public class Peer {
     private Peer(String host, int port) throws IOException {
         fileMap = new HashMap<String, File>();
 //        initializePeers(Config.basePath + "peerFileName.txt");
-        File theDir = new File(String.format("%s/ECE454_Downloads/", System.getProperty("user.home")));
+        File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
         if (!theDir.exists()) theDir.mkdir();
         initializePeers(getClass().getClassLoader().getResourceAsStream("addresses.txt"));
         this.host = host;
@@ -64,7 +64,8 @@ public class Peer {
         String fileName = chunk.getFileName();
         File file;
         if(!fileMap.containsKey(fileName)) {
-            file = new File(String.format("%s/ECE454_Downloads/%s", System.getProperty("user.home"), fileName));
+            String[] split = Peer.getHostAndPort().split(" ");
+            file = new File(String.format("%s/ECE454_Downloads/%s-%d/%s", System.getProperty("user.home"), split[0], split[1], fileName));
             fileMap.put(fileName, file);
         } else {
             file = fileMap.get(fileName);
