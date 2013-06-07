@@ -127,6 +127,9 @@ public class Peers implements Serializable {
                 replicationMap.put(fileName, fileReplicationArray);
             }
         }
+        for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
+            System.out.printf("Replication map: %s -- %s\n", entry.getKey(), Arrays.toString(entry.getValue()));
+        }
         System.out.println("finished fillReplicationMap");
 
     }
@@ -148,7 +151,6 @@ public class Peers implements Serializable {
                 }
             }
 
-//            System.out.printf("replicationFactorArray: %s\n", Arrays.toString(replicationFactorArray));
             for(int chunkNum=0; chunkNum<replicationFactorArray.length; chunkNum++) {
                 for(Map.Entry<String, BitSet> peerToBitSetEntry: peerToBitSetMap.entrySet()) {
                     String peerAddress = peerToBitSetEntry.getKey();
@@ -162,14 +164,14 @@ public class Peers implements Serializable {
            }
 
         }
-
-        for(Map.Entry<String, PriorityQueue<String>> entry1 :Sender.priorityQueueMap.entrySet()) {
-            System.out.printf("Queue enumeration for peer: %s --- ", entry1.getKey());
-            Iterator i = entry1.getValue().iterator();
-            while(i.hasNext()) {
-                System.out.printf("%s, ", i.next());
-            }
-        }
+//
+//        for(Map.Entry<String, PriorityQueue<String>> entry1 :Sender.priorityQueueMap.entrySet()) {
+//            System.out.printf("Queue enumeration for peer: %s --- ", entry1.getKey());
+//            Iterator i = entry1.getValue().iterator();
+//            while(i.hasNext()) {
+//                System.out.printf("%s, ", i.next());
+//            }
+//        }
         System.out.println("finished fillPriorityQueues");
 
 //        for(Map.Entry<String, PriorityQueue<String>> entry1: Sender.priorityQueueMap.entrySet()) {
