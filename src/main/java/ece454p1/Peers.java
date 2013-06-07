@@ -16,12 +16,16 @@ public class Peers implements Serializable {
 
     Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
     Map<String, int[]> replicationMap = new HashMap<String, int[]>();
-
     Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
+    Map<String, Integer> hostToPortMap = new HashMap<String, Integer>();
 
 
     public void setConnectionState(String peerAddress, boolean connected) {
         connectionStateMap.put(peerAddress, connected);
+    }
+
+    public boolean isConnected(String peerAddress) {
+        return connectionStateMap.get(peerAddress);
     }
 
     public Peers(Map<String, Map<String, BitSet>> peerFileMap) {
@@ -29,6 +33,11 @@ public class Peers implements Serializable {
         for(String address: this.getOtherPeerAddresses()) {
             setConnectionState(address, true);
         }
+    }
+
+
+    public int getPort(String host) {
+        return hostToPortMap.get(host);
     }
 
     public void updatePeerFileMap(Chunk chunk) {

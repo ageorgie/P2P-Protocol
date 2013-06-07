@@ -33,6 +33,7 @@ public class Peer {
         Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
         while ((line = br.readLine()) != null) {
             String[] split = line.split(" ");
+            peers.hostToPortMap.put(split[0], Integer.parseInt(split[1]));
             if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);
             }
@@ -46,6 +47,7 @@ public class Peer {
         File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
         if (!theDir.exists()) theDir.mkdir();
     }
+
 
 
 //

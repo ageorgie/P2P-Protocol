@@ -63,19 +63,21 @@ public class Sender implements Callable<Integer> {
 
     public static void send(String host, int port, Serializable object) throws IOException {
         Socket socket;
-        try {
+        if(Peer.getPeers().isConnected(String.format("%s %s", host, port))) {
+            try {
 //            System.out.printf("Send called for host:%s, port %d\n", host, port);
-            socket = new Socket(host, port);
-            OutputStream os = socket.getOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeObject(object);
-            oos.close();
-            os.close();
-            socket.close();
+                socket = new Socket(host, port);
+                OutputStream os = socket.getOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(object);
+                oos.close();
+                os.close();
+                socket.close();
 //            System.out.printf("Sender: Object successfully transferred\n", host, port);
-        } catch(ConnectException e) {
-            System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
-            Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
+            } catch(ConnectException e) {
+                System.out.printf("Sender: Connection refused for %s : %d ... retrying\n", host, port);
+                Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
+            }
         }
 
     }

@@ -47,6 +47,9 @@ public class Updater implements Callable<Integer> {
         } else {
 //            throw new Exception("Updater: Received object type is not recognized");
         }
+        String senderHostName = socket.getInetAddress().getHostName();
+        int senderPort = Peer.getPeers().getPort(senderHostName);
+        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName, senderPort), false);
         return 1;
     }
 }
