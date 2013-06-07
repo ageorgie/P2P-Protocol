@@ -4,6 +4,7 @@ import javax.sound.midi.SysexMessage;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Peers is a dumb container to hold the peers; the number of peers is fixed,
@@ -14,7 +15,7 @@ import java.util.*;
  **/
 public class Peers implements Serializable {
 
-    Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
+    ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> peerFileMap = new ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>>();
     Map<String, int[]> replicationMap = new HashMap<String, int[]>();
     Map<String, Boolean> connectionStateMap = new HashMap<String, Boolean>();
     Map<String, Integer> hostToPortMap = new HashMap<String, Integer>();
@@ -27,7 +28,7 @@ public class Peers implements Serializable {
         return connectionStateMap.get(peerAddress);
     }
 
-    public void setPeerFileMap(Map<String, Map<String, BitSet>> peerFileMap) {
+    public void setPeerFileMap(ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> peerFileMap) {
         this.peerFileMap = peerFileMap;
     }
 
@@ -37,7 +38,7 @@ public class Peers implements Serializable {
         }
     }
 
-    public Peers(Map<String, Map<String, BitSet>> peerFileMap) throws IOException {
+    public Peers(ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> peerFileMap) throws IOException {
         this.peerFileMap = peerFileMap;
         for(String address: this.getOtherPeerAddresses()) {
             setConnectionState(address, true);
@@ -56,13 +57,13 @@ public class Peers implements Serializable {
         peerFileMap.get(Peer.getHostAndPort()).put(chunk.getFileName(), bitSet);
     }
 
-    public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
+    public void updatePeerFileMap(ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> receivedPeerFileMap) {
 //        System.out.printf("receivedpeerfilemap: %s\n", receivedPeerFileMap);
         // Go through all entries in the received peer file map
-        for(Map.Entry<String, Map<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
+        for(ConcurrentHashMap.Entry<String, ConcurrentHashMap<String, BitSet>> entry:receivedPeerFileMap.entrySet()) {
 
             String receivedRemoteHost = entry.getKey().toLowerCase();
-            Map<String, BitSet> receivedBitSetMap = entry.getValue();
+            ConcurrentHashMap<String, BitSet> receivedBitSetMap = entry.getValue();
 //            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
@@ -144,7 +145,7 @@ public class Peers implements Serializable {
 
             // PeerToBitsetMap for the current filename contains a mapping of all peer addresses to the bitsets corresponding
             // to this filename
-            for(Map.Entry<String, Map<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
+            for(ConcurrentHashMap.Entry<String, ConcurrentHashMap<String, BitSet>> peerFileEntry: peerFileMap.entrySet()) {
                 if(!peerFileEntry.getKey().equals(Peer.getHostAndPort())) {
                     peerToBitSetMap.put(peerFileEntry.getKey(), peerFileEntry.getValue().get(fileName));
                 }
@@ -223,7 +224,7 @@ public class Peers implements Serializable {
                 }
             }
             System.out.print("\n");
-            for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
+            for(ConcurrentHashMap.Entry<String, ConcurrentHashMap<String, BitSet>> entry:peerFileMap.entrySet()) {
                 if(!entry.getKey().equals(Peer.getHostAndPort())) {
                     BitSet emptyBitSet = new BitSet(numChunks);
                     emptyBitSet.set(numChunks);
@@ -266,7 +267,7 @@ public class Peers implements Serializable {
         return output;
     }
 
-    public Map<String, Map<String, BitSet>> getPeerFileMap() {
+    public ConcurrentHashMap<String, ConcurrentHashMap<String, BitSet>> getPeerFileMap() {
         return peerFileMap;
     }
 

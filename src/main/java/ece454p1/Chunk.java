@@ -29,27 +29,8 @@ public class Chunk implements Serializable {
         }
         this.fileName = fileName;
         this.chunkNum = chunkNum;
-        List<Byte> byteList = new ArrayList<Byte>();
-        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
-
-        if(chunkNum!=0) {
-            dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
-        }
-
-        try {
-            for(int i=0; i<Config.CHUNK_SIZE; i++) {
-                byteList.add(dataInputStream.readByte());
-            }
-        } catch(EOFException e) {
-
-        } finally {
-//            System.err.printf("File %s, Chunk %s, bytelist.size: %d\n", fileName, chunkNum, byteList.size());
-            byteArray = new byte[byteList.size()];
-            for(int i = 0; i<byteList.size(); i++) {
-                byteArray[i] = byteList.get(i).byteValue();
-//                System.err.print(byteArray[i]);
-            }
-        }
+        byte[] tempArray = new byte[0];
+        byteArray = (Peer.synchronizedFileOperation(file, chunkNum, true, tempArray));
     }
 
     public Chunk(String fileName, int chunkNum, byte[]byteArray) {
@@ -78,13 +59,5 @@ public class Chunk implements Serializable {
     public byte[] getByteArray() {
 
         return byteArray;
-    }
-
-    public void setByteArray(byte[] byteArray) {
-        this.byteArray = byteArray;
-    }
-
-    public Map<String, Map<String, BitSet>> getPeerFileMap() {
-        return peerFileMap;
     }
 }
