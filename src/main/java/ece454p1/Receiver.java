@@ -37,7 +37,6 @@ public class Receiver implements Callable<Integer> {
             while(true) {
                 Socket client = serverSocket.accept();
                 Thread.sleep(100);
-//                System.out.printf("Receiver: accepted new connection. Delegating to Updater.\n");
                 executorService.submit(new Updater(client));
             }
         } finally {

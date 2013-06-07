@@ -41,7 +41,6 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void insertChunkIntoPriorityQueue(String destinationAddress, String fileName, Integer chunkNum, Integer priority, Integer maxChunk) {
-//        System.out.printf("insertChunkIntoPriorityQueue\n");
         if(!priorityQueueMap.containsKey(destinationAddress)) {
             priorityQueueMap.put(destinationAddress, new PriorityBlockingQueue<String>(100, new StringComparator()));
         }
@@ -51,7 +50,6 @@ public class Sender implements Callable<Integer> {
         }
         stringBuilder.append(chunkNum);
         String chunkIdentifier = String.format("%s_%s_%s_%s", priority, fileName, stringBuilder.toString(), destinationAddress);
-//        System.out.printf("inserting chunk %s\n", chunkIdentifier);
         priorityQueueMap.get(destinationAddress).offer(chunkIdentifier);
     }
 
@@ -71,13 +69,10 @@ public class Sender implements Callable<Integer> {
         Socket socket;
         String peerAddress = String.format("%s %s", host, port);
         if(Peer.getPeers().isConnected(peerAddress)) {
-//            System.out.printf("Send called for peeraddress: %s\n", peerAddress);
             try {
-//                System.out.printf("Sender: Send called for host:%s, port %d\n", host, port);
                 socket = new Socket();
                 try {
                     socket.connect(new InetSocketAddress(host, port), 1000);
-//                    System.out.printf("Sender: Socket Opened\n");
                 } catch (SocketTimeoutException e) {
                     System.err.printf("Sender: Socket connection timed out\n");
                     Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
@@ -86,7 +81,6 @@ public class Sender implements Callable<Integer> {
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
-//                System.out.printf("Sender: wrote object\n");
                 oos.close();
                 os.close();
                 socket.close();
@@ -116,7 +110,6 @@ public class Sender implements Callable<Integer> {
                    System.err.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s \n" ,peerAddress, isConnected, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
-//                       System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
                        List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
                        for(String address: addresses) {
                            String[] split = address.split(" ");
@@ -124,7 +117,6 @@ public class Sender implements Callable<Integer> {
                            Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
                        }
                    } else {
-//                       System.out.printf("Sending my current chunk:\n");
                        String fileName = pollSplit[1];
                        int chunkNum = Integer.parseInt(pollSplit[2]);
                        String destination = pollSplit[3];
