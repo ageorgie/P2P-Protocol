@@ -126,7 +126,6 @@ public class Peers implements Serializable {
 
     public void fillPriorityQueues() {
 
-        System.out.printf("Connection State Map: %s\n", Peer.getPeers().getConnectionStateMap());
         for(Map.Entry<String, int[]> entry:replicationMap.entrySet()) {
             // We go through all the filenames, and create a map of filename to replicationFactorArray
             String fileName = entry.getKey();
