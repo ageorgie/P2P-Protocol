@@ -99,13 +99,7 @@ public class Sender implements Callable<Integer> {
     }
 
     public static void sendPeerFileMap() throws IOException {
-        System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
-        List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
-        for(String address: addresses) {
-            String[] split = address.split(" ");
-            Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
-            Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
-        }
+
     }
 
     public Integer call() throws Exception {
@@ -114,14 +108,20 @@ public class Sender implements Callable<Integer> {
                String peerAddress = entry.getKey();
                PriorityBlockingQueue<String> priorityQueue = entry.getValue();
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
-
                if(isConnected && !priorityQueue.isEmpty()) {
                    String poll = priorityQueue.poll();
-                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s: %s \n" ,peerAddress, isConnected, poll);
+                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, Poll: %s \n" ,peerAddress, isConnected, poll);
                    String[] pollSplit = poll.split("_");
                    if(pollSplit[1].equals("!!PeerFileMap!!")) {
-                       sendPeerFileMap();
+                       System.out.printf("Sending my current peerFileMap: %s\n", Peer.getPeers().getPeerFileMap());
+                       List<String> addresses = Peer.getPeers().getOtherPeerAddresses();
+                       for(String address: addresses) {
+                           String[] split = address.split(" ");
+                           Serializable peerFileMap = (Serializable) Peer.getPeers().getPeerFileMap();
+                           Sender.send(split[0], Integer.parseInt(split[1]), peerFileMap);
+                       }
                    } else {
+                       System.out.printf("Sending my current chunk:\n");
                        String fileName = pollSplit[1];
                        int chunkNum = Integer.parseInt(pollSplit[2]);
                        String destination = pollSplit[3];
