@@ -82,20 +82,20 @@ public class Peers implements Serializable {
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
-                System.out.printf("Peers: peerFileMap has key for peer %s \n", receivedRemoteHost);
+//                System.out.printf("Peers: peerFileMap has key for peer %s \n", receivedRemoteHost);
                 // If so, iterate through all received filenames and bitsets, and OR them, if we didn't use to have it, insert them
                 for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
                     String receivedFileName = receivedBitSetEntry.getKey();
-                    System.out.printf("Peers: peer has bitset for file: %s \n", receivedFileName);
+//                    System.out.printf("Peers: peer has bitset for file: %s \n", receivedFileName);
                     BitSet receivedBitSet = receivedBitSetEntry.getValue();
 //                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", receivedRemoteHost, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
-                        System.out.printf("This is your bitset before the or: %s \n", bitSet.toString());
+//                        System.out.printf("This is your bitset before the or: %s \n", bitSet.toString());
                         bitSet.or(receivedBitSet);
-                        System.out.printf("This is your bitset after the or: %s \n", bitSet.toString());
+//                        System.out.printf("This is your bitset after the or: %s \n", bitSet.toString());
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, bitSet);
-                        System.out.printf("This is your bitset when it is in peerFileMap: %s \n", peerFileMap.get(receivedRemoteHost).get(receivedFileName));
+//                        System.out.printf("This is your bitset when it is in peerFileMap: %s \n", peerFileMap.get(receivedRemoteHost).get(receivedFileName));
                     } else {
                         peerFileMap.get(receivedRemoteHost).put(receivedFileName, receivedBitSet);
                     }

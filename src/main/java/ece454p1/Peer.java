@@ -145,7 +145,6 @@ public class Peer {
                 executeCommand(br.readLine());
             } catch (IOException ioe) {
                 System.out.println("Error while buffering input");
-                System.exit(1);
             }
         }
     }
