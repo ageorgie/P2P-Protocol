@@ -120,11 +120,11 @@ public class Peer {
 	public static int query(Status status){
         status = new Status();
         System.out.printf("status: %s", status.toString());
-        System.out.printf("Weighted Least Replication: %s", status.weightedLeastReplication);
-        System.out.printf("Least Replication: %s", status.leastReplication);
-        System.out.printf("Fraction of local files: %s", status.local);
-        System.out.printf("Fraction of system files: %s", status.system);
-        System.out.printf("Number of Files: %d", status.numberOfFiles());
+        System.out.printf("Weighted Least Replication: %s \n", status.weightedLeastReplication);
+        System.out.printf("Least Replication: %s \n", status.leastReplication);
+        System.out.printf("Fraction of local files: %s \n", status.local);
+        System.out.printf("Fraction of system files: %s \n", status.system);
+        System.out.printf("Number of Files: %d \n", status.numberOfFiles());
         return -1;
     };
 
