@@ -1,9 +1,7 @@
 package ece454p1;
 
 import java.io.*;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +14,7 @@ public class Chunk implements Serializable {
 
     String fileName;
     int chunkNum;
-    byte[] byteArray = new byte[Config.CHUNK_SIZE];
+    Byte[] byteArray;
     Map<String, Map<String, BitSet>> peerFileMap;
     String destination;
 
@@ -31,14 +29,21 @@ public class Chunk implements Serializable {
         }
         this.fileName = fileName;
         this.chunkNum = chunkNum;
+        List<Byte> byteList = new ArrayList<Byte>();
         DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file.getAbsolutePath()));
         dataInputStream.skipBytes(Config.CHUNK_SIZE*chunkNum);
-        for(int i=0; i<Config.CHUNK_SIZE; i++) {
-            byteArray[i] = dataInputStream.readByte();
+        try {
+            for(int i=0; i<Config.CHUNK_SIZE; i++) {
+                byteList.add(dataInputStream.readByte());
+            }
+        } catch(EOFException e) {
+        } finally {
+            byteArray = byteList.toArray(new Byte[0]);
         }
+
     }
 
-    public Chunk(String fileName, int chunkNum, byte[]byteArray) {
+    public Chunk(String fileName, int chunkNum, Byte[] byteArray) {
         this.fileName = fileName;
         this.chunkNum = chunkNum;
         this.byteArray = byteArray;
@@ -61,12 +66,11 @@ public class Chunk implements Serializable {
         this.chunkNum = chunkNum;
     }
 
-    public byte[] getByteArray() {
-
+    public Byte[] getByteArray() {
         return byteArray;
     }
 
-    public void setByteArray(byte[] byteArray) {
+    public void setByteArray(Byte[] byteArray) {
         this.byteArray = byteArray;
     }
 

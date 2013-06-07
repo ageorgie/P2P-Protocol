@@ -99,13 +99,7 @@ public class Peer {
             System.out.println("Can't read DOG!");
             return -1;
         }
-        double length = file.length() * 1.0000;
-        System.out.printf("length = %.5f\n", length);
-        double chunk_size = Config.CHUNK_SIZE * 1.0000;
-        System.out.printf("chunk_size = %.5f\n", chunk_size);
-        double divisionResult = length / chunk_size;
-        System.out.printf("divisionResult = %.5f\n", divisionResult);
-        int numChunks = (int) Math.ceil(divisionResult);
+        int numChunks = (int) Math.ceil((file.length() * 1.0000)/(Config.CHUNK_SIZE * 1.0000));
         System.out.printf("file length: %d\n", file.length());
         System.out.printf("numchunks: %d\n", numChunks );
         String[] splitPath = filePath.split("/");
