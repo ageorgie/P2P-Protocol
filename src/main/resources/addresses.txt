@@ -1,6 +1,11 @@
+ecelinux1.uwaterloo.ca 10063
 eceLinux2.uwaterloo.ca 10063
 ecelinux3.uwaterloo.ca 10064
 ecelinux4.uwaterloo.ca 10063
 ecelinux5.uwaterloo.ca 10064
 ecelinux6.uwaterloo.ca 10063
 ecelinux7.uwaterloo.ca 10064
+ecelinux8.uwaterloo.ca 10063
+ecelinux9.uwaterloo.ca 10063
+ecelinux10.uwaterloo.ca 10063
+
