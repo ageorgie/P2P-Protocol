@@ -36,6 +36,8 @@ public class Updater implements Callable<Integer> {
             if(file.exists()){
                 file.delete();
             }
+            file.setReadable(true);
+            file.setWritable(true);
             System.out.println("3");
             fileMap.put(fileName, file);
         } else {
@@ -45,7 +47,7 @@ public class Updater implements Callable<Integer> {
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
         System.out.println("5");
         try {
-            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            RandomAccessFile raf = new RandomAccessFile(file, "w");
             System.out.println("6");
             try {
                 raf.seek(byteOffset);
