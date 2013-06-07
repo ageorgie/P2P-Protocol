@@ -213,7 +213,8 @@ public class Peers implements Serializable {
             if(!Peer.getHost().toLowerCase().equals(line.split(" ")[0].toLowerCase())) {
                 output.add(line);
             }
-            peerFileMap.put(line, new HashMap<String, BitSet>());
+            System.out.printf("output: %s\n", output);
+//            peerFileMap.put(line, new HashMap<String, BitSet>());
         }
         br.close();
 //        for(Map.Entry<String, Map<String, BitSet>> entry:peerFileMap.entrySet()) {
