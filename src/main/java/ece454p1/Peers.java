@@ -52,8 +52,11 @@ public class Peers implements Serializable {
     public void updatePeerFileMap(Chunk chunk) {
         System.out.printf("Peers: updatePeerFileMap: chunk %s, %d\n", chunk.fileName, chunk.chunkNum);
         BitSet bitSet = peerFileMap.get(Peer.getHostAndPort()).get(chunk.getFileName());
+        System.out.printf("My current bitset before the update %s \n", bitSet);
         bitSet.set(chunk.chunkNum);
+        System.out.printf("My current bitset after the update %s \n", bitSet);
         peerFileMap.get(Peer.getHostAndPort()).put(chunk.getFileName(), bitSet);
+        System.out.printf("My peerFileMap bitset setting it %s \n", peerFileMap.get(Peer.getHostAndPort()).get(chunk.getFileName()));
     }
 
     public void updatePeerFileMap(Map<String, Map<String, BitSet>> receivedPeerFileMap) {
