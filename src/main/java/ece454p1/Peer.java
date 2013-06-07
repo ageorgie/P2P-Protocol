@@ -23,6 +23,7 @@ public class Peer {
     static String host;
     static int port;
     static ExecutorService executorService = Executors.newFixedThreadPool(15);
+    static boolean leaveFlag = false;
 
 
     public static String getHost() {
@@ -145,6 +146,8 @@ public class Peer {
     };
 
 	public static int leave(){
+        leaveFlag = true;
+
         return -1;
     };
 
