@@ -28,6 +28,9 @@ public class Updater implements Callable<Integer> {
         Object obj = new Object();
         InputStream is = socket.getInputStream();
         System.out.printf("Accepted incoming connection from %s\n", socket.getInetAddress().getHostName());
+        String senderHostName = socket.getInetAddress().getHostName();
+        int senderPort = Peer.getPeers().getPort(senderHostName);
+        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName, senderPort), true);
         ObjectInputStream ois = new ObjectInputStream(is);
 
         try {
@@ -48,9 +51,7 @@ public class Updater implements Callable<Integer> {
         } else {
 //            throw new Exception("Updater: Received object type is not recognized");
         }
-        String senderHostName = socket.getInetAddress().getHostName();
-        int senderPort = Peer.getPeers().getPort(senderHostName);
-        Peer.getPeers().setConnectionState(String.format("%s %s", senderHostName, senderPort), true);
+
         return 1;
     }
 }
