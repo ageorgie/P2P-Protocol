@@ -59,6 +59,7 @@ public class Updater implements Callable<Integer> {
                 System.out.println("Error while writing to file");
             }
         } catch (IOException ex) {
+            System.out.println("Caught ioexception");
             throw ex;
         }
     }
