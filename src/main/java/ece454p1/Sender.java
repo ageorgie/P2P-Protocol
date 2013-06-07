@@ -22,7 +22,7 @@ public class Sender implements Callable<Integer> {
 
     public Sender() throws IOException, InterruptedException {
         priorityQueueMap = new HashMap<String, PriorityQueue<String>>();
-        broadcast.set(false);
+        broadcast.getAndSet(false);
         for(String address: Peer.getPeers().getOtherPeerAddresses()) {
             priorityQueueMap.put(address, new PriorityQueue<String>());
         }
