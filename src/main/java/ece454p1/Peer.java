@@ -25,6 +25,7 @@ public class Peer {
     static int port;
     static ExecutorService executorService = Executors.newFixedThreadPool(15);
     static Future senderFuture;
+    static Future receiverFuture;
 
 
     public static String getHost() {
@@ -116,7 +117,7 @@ public class Peer {
 	 */
 	public static int join() throws IOException, InterruptedException {
 
-        executorService.submit(new Receiver(port));
+        receiverFuture = executorService.submit(new Receiver(port));
         senderFuture = executorService.submit(new Sender());
         executorService.submit(new StateBroadcaster());
 
@@ -175,6 +176,9 @@ public class Peer {
             case refresh_sender:
                 senderFuture.cancel(true);
                 senderFuture = executorService.submit(new Sender());
+            case refresh_receiver:
+                receiverFuture.cancel(true);
+                receiverFuture = executorService.submit(new Receiver(port));
             default:
                 break;
         }
@@ -187,6 +191,7 @@ public class Peer {
          leave,
          insert,
          query,
-         refresh_sender
+         refresh_sender,
+         refresh_receiver
      }
 }
