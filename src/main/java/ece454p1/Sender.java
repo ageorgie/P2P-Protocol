@@ -65,7 +65,7 @@ public class Sender implements Callable<Integer> {
         Socket socket;
         if(Peer.getPeers().isConnected(String.format("%s %s", host, port))) {
             try {
-            System.out.printf("Send called for host:%s, port %d/n", host, port);
+            System.out.printf("Send called for host:%s, port %d\n", host, port);
                 socket = new Socket(host, port);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);

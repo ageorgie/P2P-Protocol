@@ -61,7 +61,7 @@ public class Peers implements Serializable {
 
             String receivedRemoteHost = entry.getKey();
             Map<String, BitSet> receivedBitSetMap = entry.getValue();
-//            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
+            System.out.printf("receivedRemoteHost: %s, receivedBitSetMap: %s \n", receivedRemoteHost, receivedBitSetMap);
 
             // check if out local peer file map contains a key for the address of the remote host who sent us its map
             if(peerFileMap.containsKey(receivedRemoteHost)) {
@@ -70,7 +70,7 @@ public class Peers implements Serializable {
                 for(Map.Entry<String, BitSet> receivedBitSetEntry: receivedBitSetMap.entrySet()) {
                     String receivedFileName = receivedBitSetEntry.getKey();
                     BitSet receivedBitSet = receivedBitSetEntry.getValue();
-//                    System.out.printf("peerfilemap: %s\n", peerFileMap);
+                    System.out.printf("In for loop\n");
 //                    System.out.printf("receivedRemoteHost: %s, receivedFileName: %s \n", receivedRemoteHost, receivedFileName);
                     if(peerFileMap.get(receivedRemoteHost).containsKey(receivedFileName)) {
                         BitSet bitSet = peerFileMap.get(receivedRemoteHost).get(receivedFileName);
