@@ -28,6 +28,16 @@ public class Peers implements Serializable {
         return connectionStateMap.get(peerAddress);
     }
 
+    public void setPeerFileMap(Map<String, Map<String, BitSet>> peerFileMap) {
+        this.peerFileMap = peerFileMap;
+    }
+
+    public Peers() {
+        for(String address: this.getOtherPeerAddresses()) {
+            setConnectionState(address, true);
+        }
+    }
+
     public Peers(Map<String, Map<String, BitSet>> peerFileMap) {
         this.peerFileMap = peerFileMap;
         for(String address: this.getOtherPeerAddresses()) {

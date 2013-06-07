@@ -30,19 +30,19 @@ public class Peer {
         host = InetAddress.getLocalHost().getHostName();
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
-        Map<String, Map<String, BitSet>> bitSetMap = new HashMap<String, Map<String, BitSet>>();
+        Map<String, Map<String, BitSet>> peerFileMap = new HashMap<String, Map<String, BitSet>>();
+        peers = new Peers();
         while ((line = br.readLine()) != null) {
             String[] split = line.split(" ");
             peers.hostToPortMap.put(split[0], Integer.parseInt(split[1]));
             if(host.toLowerCase().equals(split[0].toLowerCase())) {
                 port = Integer.parseInt(split[1]);
             }
-            bitSetMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
+            peerFileMap.put(line.toLowerCase(), new HashMap<String, BitSet>());
         }
         br.close();
-
+        peers.setPeerFileMap(peerFileMap);
         System.out.printf("Peer created. Host: %s Port: %d", host, port);
-        peers = new Peers(bitSetMap);
         fileMap = new HashMap<String, File>();
         File theDir = new File(String.format("%s/ECE454_Downloads/%s-%d/", System.getProperty("user.home"), host, port));
         if (!theDir.exists()) theDir.mkdir();
