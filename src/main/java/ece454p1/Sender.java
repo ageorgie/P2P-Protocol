@@ -99,9 +99,8 @@ public class Sender implements Callable<Integer> {
                PriorityQueue<String> priorityQueue = entry.getValue();
                boolean isConnected = Peer.getPeers().isConnected(peerAddress);
                boolean pqEmpty = !priorityQueue.isEmpty();
-               System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
-
-               if(isConnected && pqEmpty ) {
+               if(isConnected && !pqEmpty ) {
+                   System.out.printf("Sender: peeraddress: %s, isConnected: %s, priority queue empty: %s \n" ,peerAddress, isConnected, pqEmpty);
                    String poll = priorityQueue.poll();
                    System.out.printf("Sender: Poll for %s: %s\n", peerAddress, poll);
                    String[] pollSplit = poll.split("_");
