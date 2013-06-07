@@ -1,8 +1,6 @@
 package ece454p1;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -23,6 +21,37 @@ public class Updater implements Callable<Integer> {
     public Updater(Socket socket) {
         this.socket = socket;
     }
+
+
+    public static void receiveChunk(Chunk chunk) throws IOException {
+        String fileName = chunk.getFileName();
+        File file;
+        Map<String, File> fileMap = Peer.getFileMap();
+        if(!fileMap.containsKey(fileName)) {
+            String[] split = Peer.getHostAndPort().split(" ");
+            file = new File(String.format("%s/ECE454_Downloads/%s-%s/%s", System.getProperty("user.home"), split[0], split[1], fileName));
+            if(file.exists()){
+                file.delete();
+            }
+            fileMap.put(fileName, file);
+        } else {
+            file = fileMap.get(fileName);
+        }
+        int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
+        try {
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            try {
+                raf.seek(byteOffset);
+                raf.write(chunk.getByteArray());
+                Peer.getPeers().updatePeerFileMap(chunk);
+            } catch (Exception e){
+                System.out.println("Error while writing to file");
+            }
+        } catch (IOException ex) {
+            throw ex;
+        }
+    }
+
 
     public Integer call() throws Exception {
         Object obj = new Object();
@@ -45,7 +74,7 @@ public class Updater implements Callable<Integer> {
         if(obj.getClass().isAssignableFrom(Chunk.class)) {
             Chunk chunk = (Chunk) obj;
             System.out.printf("Updater: Received file: %s, chunk: %s\n", chunk.getFileName(), chunk.getChunkNum());
-            Peer.ReceiveChunk(chunk);
+            receiveChunk(chunk);
         } else if (obj.getClass().isAssignableFrom(HashMap.class)) {
             Map<String, Map<String, BitSet>> bitSetMap = (Map<String, Map<String, BitSet>>) obj;
 //            System.out.printf("Updater: Received bitsetmap: %s\n", bitSetMap);

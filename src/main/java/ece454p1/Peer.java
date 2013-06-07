@@ -81,34 +81,6 @@ public class Peer {
         return peers;
     }
 
-    public static void ReceiveChunk(Chunk chunk) throws IOException {
-        String fileName = chunk.getFileName();
-        File file;
-
-        if(!fileMap.containsKey(fileName)) {
-            String[] split = Peer.getHostAndPort().split(" ");
-            file = new File(String.format("%s/ECE454_Downloads/%s-%s/%s", System.getProperty("user.home"), split[0], split[1], fileName));
-            if(file.exists()){
-                file.delete();
-            }
-            fileMap.put(fileName, file);
-        } else {
-            file = fileMap.get(fileName);
-        }
-        int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
-        try {
-            RandomAccessFile raf = new RandomAccessFile(file, "rw");
-            try {
-                raf.seek(byteOffset);
-                raf.write(chunk.getByteArray());
-                peers.updatePeerFileMap(chunk);
-            } catch (Exception e){
-                System.out.println("Error while writing to file");
-            }
-        } catch (IOException ex) {
-           throw ex;
-        }
-    }
 
 
 	// This is the formal interface and you should follow it
