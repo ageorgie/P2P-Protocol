@@ -62,11 +62,15 @@ public class Peer {
             boolean mkdirOut = baseDir.mkdir();
             System.out.printf("mkdir returned %s\n", mkdirOut);
         }
+        baseDir.setReadable(true);
+        baseDir.setWritable(true);
         File theDir = new File(path);
         if (!theDir.exists()) {
             boolean mkdirOut = theDir.mkdir();
             System.out.printf("mkdir returned %s\n", mkdirOut);
         }
+        theDir.setReadable(true);
+        theDir.setWritable(true);
     }
 
 
