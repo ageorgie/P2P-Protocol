@@ -47,6 +47,8 @@ public class Updater implements Callable<Integer> {
         System.out.println("4");
         int byteOffset = chunk.getChunkNum()*Config.CHUNK_SIZE;
         System.out.println("5");
+
+        System.out.println(file.toString());
 //        try {
         RandomAccessFile raf = new RandomAccessFile(file, "w");
         System.out.println("6");
