@@ -87,6 +87,7 @@ public class Sender implements Callable<Integer> {
                     System.out.printf("Sender: Socket Opened\n");
                 } catch (SocketTimeoutException e) {
                     System.out.printf("Sender: Socket connection timed out\n");
+                    Peer.getPeers().setConnectionState(String.format("%s %s", host, port), false);
                     return;
                 }
                 OutputStream os = socket.getOutputStream();
