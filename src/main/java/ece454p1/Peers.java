@@ -53,10 +53,9 @@ public class Peers implements Serializable {
             String fileName = entry.getKey();
             System.out.printf("Can I get bitset for %s \n", fileName);
             BitSet bitSet = entry.getValue();
-            System.out.printf("Here is the bitset for %s: ", fileName);
             int[] replicationArray = replicationMap.get(fileName);
             for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
-                System.out.printf("%d", i);
+                System.out.printf("Replication: %d \n", replicationArray[i]);
                 if(replicationArray[i] <= 1) {
                     System.err.println("Peers: Not allowed to leave yet.");
                     return false;
