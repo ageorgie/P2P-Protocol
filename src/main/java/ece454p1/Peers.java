@@ -59,11 +59,13 @@ public class Peers implements Serializable {
                 System.out.printf("Next Set Bit: %d", bitSet.nextSetBit(i+1));
                 System.out.printf("Current Set Bit: %d", i);
                 if(i == 6){
-                    if(replicationArray[i] <= 1) {
-                        System.err.println("Peers: Not allowed to leave yet.");
-                        return false;
-                    }
+                    break;
                 }
+                if(replicationArray[i] <= 1) {
+                    System.err.println("Peers: Not allowed to leave yet.");
+                    return false;
+                }
+
             }
             System.out.println("Is it not getting here?");
         }
