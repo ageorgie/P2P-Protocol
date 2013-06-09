@@ -71,10 +71,10 @@ public class Status {
         for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
             for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
                 if(entry.getKey().equals(Peer.getHostAndPort())){
-                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
+                    float size = ((float) (fileBitSet.getValue().cardinality() - 1))/((float) (fileBitSet.getValue().length() - 1));
                     this.local.put(entry.getKey(), size);
                 }
-                int numChunks = fileBitSet.getValue().cardinality();
+                int numChunks = fileBitSet.getValue().cardinality() - 1;
                 if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
                     numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
                 }
@@ -113,7 +113,7 @@ public class Status {
         for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
             for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
                 if(entry.getKey().equals(Peer.getHostAndPort())){
-                    float size = ((float) fileBitSet.getValue().cardinality())/((float) fileBitSet.getValue().length());
+                    float size = ((float) (fileBitSet.getValue().cardinality() - 1))/((float) (fileBitSet.getValue().length() - 1));
                     this.local.put(entry.getKey(), size);
                 }
             }
@@ -134,7 +134,7 @@ public class Status {
         Map<String, Integer> totalChunksPerFile = new HashMap<String, Integer>();
         for(Map.Entry<String, Map<String, BitSet>> entry : bitsetMap.entrySet()){
             for(Map.Entry<String, BitSet> fileBitSet : entry.getValue().entrySet()){
-                int numChunks = fileBitSet.getValue().cardinality();
+                int numChunks = fileBitSet.getValue().cardinality()-1;
                 if(numOfChunksInSystem.containsKey(fileBitSet.getKey())){
                     numChunks += numOfChunksInSystem.get(fileBitSet.getKey());
                 }
