@@ -45,21 +45,34 @@ public class Peers implements Serializable {
         }
     }
 
+    public boolean amAlone(){
+        for(Map.Entry<String, Boolean> entry: connectionStateMap.entrySet()) {
+            if(entry.getKey().equals(Peer.getHostAndPort())){
+                continue;
+            }
+            if(entry.getValue()){
+                return false;
+            }
+        }
+        return true;
+    }
 
     public boolean allowedToLeave() {
-        Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
-        for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
-            String fileName = entry.getKey();
-            BitSet bitSet = entry.getValue();
-            int[] replicationArray = replicationMap.get(fileName);
-            for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
-                if(i == bitSet.length()-1){
-                    break;
-                }
-                if(replicationArray[i] <= 1) {
-                    return false;
-                }
+        if(!amAlone()){
+            Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
+            for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
+                String fileName = entry.getKey();
+                BitSet bitSet = entry.getValue();
+                int[] replicationArray = replicationMap.get(fileName);
+                for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
+                    if(i == bitSet.length()-1){
+                        break;
+                    }
+                    if(replicationArray[i] <= 1) {
+                        return false;
+                    }
 
+                }
             }
         }
         return true;
