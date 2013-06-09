@@ -125,7 +125,6 @@ public class Peer {
     };
 
 	public static int leave(){
-        System.out.println("Peer: I am trying to leave");
         executorService.submit(new ExitConditionChecker());
         return -1;
     };

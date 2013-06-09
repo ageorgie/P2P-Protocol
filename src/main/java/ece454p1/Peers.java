@@ -47,29 +47,21 @@ public class Peers implements Serializable {
 
 
     public boolean allowedToLeave() {
-        System.out.println("Allowed to LEAVE");
         Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
             String fileName = entry.getKey();
-            System.out.printf("Can I get bitset for %s \n", fileName);
             BitSet bitSet = entry.getValue();
             int[] replicationArray = replicationMap.get(fileName);
-            System.out.printf("Bitset length: %d", bitSet.length());
             for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
-                System.out.printf("Next Set Bit: %d", bitSet.nextSetBit(i+1));
-                System.out.printf("Current Set Bit: %d", i);
                 if(i == bitSet.length()-1){
                     break;
                 }
                 if(replicationArray[i] <= 1) {
-                    System.err.println("Peers: Not allowed to leave yet.");
                     return false;
                 }
 
             }
-            System.out.println("Is it not getting here?");
         }
-        System.out.println("Out of allowed to leave");
         return true;
     }
 

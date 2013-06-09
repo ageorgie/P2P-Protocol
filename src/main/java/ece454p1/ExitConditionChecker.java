@@ -13,9 +13,7 @@ public class ExitConditionChecker implements Callable<Integer> {
 
     public Integer call() throws InterruptedException {
         while(true) {
-            System.out.println("Exit Condition Checker");
             Thread.sleep(5000);
-            System.out.println("Exit Condition Checker start");
             if(Peer.getPeers().allowedToLeave()) {
                 System.exit(1);
             }
