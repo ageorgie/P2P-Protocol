@@ -47,6 +47,7 @@ public class Peers implements Serializable {
 
 
     public boolean allowedToLeave() {
+        System.out.println("Allowed to LEAVE");
         Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
             String fileName = entry.getKey();
