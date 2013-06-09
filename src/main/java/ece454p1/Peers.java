@@ -54,12 +54,13 @@ public class Peers implements Serializable {
             System.out.printf("Can I get bitset for %s \n", fileName);
             BitSet bitSet = entry.getValue();
             int[] replicationArray = replicationMap.get(fileName);
+            System.out.printf("Bitset length: %d", bitSet.length());
             for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
                 System.out.printf("Next Set Bit: %d", bitSet.nextSetBit(i+1));
                 System.out.printf("Current Set Bit: %d", i);
-//                if(i == 6){
-//                    break;
-//                }
+                if(i == bitSet.length()-1){
+                    break;
+                }
                 if(replicationArray[i] <= 1) {
                     System.err.println("Peers: Not allowed to leave yet.");
                     return false;
