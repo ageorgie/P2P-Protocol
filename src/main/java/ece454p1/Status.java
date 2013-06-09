@@ -59,6 +59,11 @@ public class Status {
 
     public Status() {
         this.numFiles = Peer.getFileMap().size();
+        this.local = new HashMap<String, Float>();
+        this.system = new HashMap<String, Float>();
+        this.leastReplication = new HashMap<String, Integer>();
+        this.weightedLeastReplication = new HashMap<String, Float>();
+
         //System and local
         Map<String, Map<String, BitSet>>  bitsetMap = Peer.getPeers().getPeerFileMap() ;
         Map<String, Integer> numOfChunksInSystem = new HashMap<String, Integer>();
