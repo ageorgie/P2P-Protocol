@@ -51,19 +51,19 @@ public class Peers implements Serializable {
         Map<String, BitSet> myBitSetMap = peerFileMap.get(Peer.getHostAndPort());
         for(Map.Entry<String, BitSet> entry: myBitSetMap.entrySet()) {
             String fileName = entry.getKey();
+            System.out.printf("Can I get bitset for %s \n", fileName);
             BitSet bitSet = entry.getValue();
-            System.out.printf("Can I get replication map for %s \n", fileName);
+            System.out.printf("Here is the bitset for %s: ", fileName);
             int[] replicationArray = replicationMap.get(fileName);
-            for(int i : replicationArray){
-                System.out.printf("Here is replication map: %d", i);
-            }
             for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i+1)) {
+                System.out.printf("%d", i);
                 if(replicationArray[i] <= 1) {
                     System.err.println("Peers: Not allowed to leave yet.");
                     return false;
                 }
             }
         }
+        System.out.println("Out of allowed to leave");
         return true;
     }
 
